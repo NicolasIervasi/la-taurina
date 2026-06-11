@@ -4,308 +4,271 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Almacén La Taurina</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #F5F0E8;
-    --brown: #2C1A0E;
-    --brown2: #5C3D1E;
-    --green: #2E6B3E;
-    --green-light: #4A9960;
-    --amber: #D4820A;
-    --amber-light: #F0A030;
-    --red: #B83232;
-    --gray: #8C7B6B;
-    --card: #FFFDF7;
-    --border: #E0D4C0;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--brown); min-height:100vh; }
+:root {
+  --cream:#F5F0E8; --brown:#2C1A0E; --brown2:#5C3D1E;
+  --green:#2E6B3E; --amber:#D4820A; --amber-l:#F0A030;
+  --red:#B83232; --gray:#8C7B6B; --card:#FFFDF7; --border:#E0D4C0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--brown);min-height:100vh;}
 
-  /* ── HEADER ── */
-  header {
-    background: var(--brown);
-    padding: 0 16px;
-    position: sticky; top:0; z-index:100;
-    box-shadow: 0 3px 16px rgba(0,0,0,0.35);
-  }
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-  }
-  .logo-area { display:flex; align-items:center; gap:12px; }
-  .logo-icon {
-    width:44px; height:44px; background:var(--amber);
-    border-radius:10px; display:flex; align-items:center;
-    justify-content:center; font-size:22px;
-  }
-  .logo-text { line-height:1; }
-  .logo-name {
-    font-family:'Playfair Display',serif;
-    color:#fff; font-size:20px; font-weight:900; letter-spacing:-0.3px;
-  }
-  .logo-sub { color:var(--amber-light); font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; }
+/* ── AUTH ── */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#2C1A0E,#5C3D1E);}
+.auth-card{background:var(--card);border-radius:20px;padding:32px 28px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+.auth-logo{text-align:center;margin-bottom:22px;}
+.auth-icon{width:58px;height:58px;background:var(--amber);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:27px;margin-bottom:10px;}
+.auth-name{font-family:'Playfair Display',serif;font-size:25px;font-weight:900;display:block;}
+.auth-sub{font-size:11px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;}
+.auth-tabs{display:flex;border:2px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.auth-tab{flex:1;padding:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;border:none;cursor:pointer;background:transparent;color:var(--gray);transition:all .2s;}
+.auth-tab.active{background:var(--brown);color:#fff;}
+.field{margin-bottom:13px;}
+.field label{font-size:12px;font-weight:600;color:var(--brown2);display:block;margin-bottom:4px;}
+.field input{width:100%;border:2px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--brown);background:var(--cream);outline:none;transition:border-color .2s;}
+.field input:focus{border-color:var(--green);}
+.field input.err-input{border-color:var(--red);}
+.err{font-size:11px;color:var(--red);display:block;margin-top:3px;min-height:14px;}
+.btn-primary{width:100%;background:var(--brown);color:#fff;border:none;border-radius:12px;padding:13px;font-family:'Playfair Display',serif;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;margin-top:4px;}
+.btn-primary:hover{background:var(--brown2);}
 
-  .header-right { display:flex; align-items:center; gap:10px; }
+/* ── HEADER ── */
+header{background:var(--brown);padding:0 15px;position:sticky;top:0;z-index:100;box-shadow:0 3px 16px rgba(0,0,0,.3);}
+.h-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0;}
+.logo-area{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:38px;height:38px;background:var(--amber);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px;}
+.logo-name{font-family:'Playfair Display',serif;color:#fff;font-size:18px;font-weight:900;}
+.logo-sub{color:var(--amber-l);font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;}
+.h-right{display:flex;align-items:center;gap:8px;}
+.hbadge{font-size:11px;font-weight:600;padding:4px 9px;border-radius:50px;display:flex;align-items:center;gap:4px;}
+.hbadge.ab{background:#1a4d2a;color:#6fe89a;} .hbadge.ce{background:#4d1a1a;color:#f08080;}
+.hdot{width:6px;height:6px;border-radius:50%;} .ab .hdot{background:#6fe89a;} .ce .hdot{background:#f08080;}
+.cart-btn{background:var(--amber);border:none;border-radius:50px;padding:8px 13px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;color:var(--brown);cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .2s;}
+.cart-btn:hover{background:var(--amber-l);}
+.cart-count{background:var(--red);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.user-strip{background:rgba(255,255,255,.05);border-top:1px solid rgba(255,255,255,.08);padding:6px 15px;display:flex;align-items:center;justify-content:space-between;}
+.user-name{font-size:12px;color:rgba(255,255,255,.7);}
+.logout-btn{background:none;border:none;color:var(--amber-l);font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.bnav{background:var(--brown);border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:center;}
+.nbtn{flex:1;max-width:140px;background:none;border:none;color:rgba(255,255,255,.5);padding:7px 0;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s;}
+.nbtn .ni{font-size:15px;} .nbtn.active{color:var(--amber-l);} .nbtn:hover{color:#fff;}
+.h-strip{background:rgba(255,255,255,.06);border-top:1px solid rgba(255,255,255,.08);padding:5px 0;text-align:center;font-size:11px;color:rgba(255,255,255,.5);}
+.h-strip strong{color:var(--amber-l);}
+#cerradoBanner{display:none;background:#4d1a1a;color:#f5c5c5;text-align:center;padding:11px 20px;font-size:13px;font-weight:500;border-bottom:2px solid #7a2222;}
 
-  .horario-badge {
-    font-size:11px; font-weight:600; padding:5px 10px;
-    border-radius:50px; display:flex; align-items:center; gap:5px;
-  }
-  .horario-badge.abierto { background:#1a4d2a; color:#6fe89a; }
-  .horario-badge.cerrado { background:#4d1a1a; color:#f08080; }
-  .horario-dot { width:7px; height:7px; border-radius:50%; }
-  .horario-badge.abierto .horario-dot { background:#6fe89a; }
-  .horario-badge.cerrado .horario-dot { background:#f08080; }
+/* ── CATEGORIES ── */
+.cats{display:flex;gap:8px;padding:12px 12px 4px;overflow-x:auto;scrollbar-width:none;}
+.cats::-webkit-scrollbar{display:none;}
+.cat-btn{border:2px solid var(--brown2);background:transparent;padding:5px 13px;border-radius:50px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--brown2);cursor:pointer;white-space:nowrap;transition:all .2s;}
+.cat-btn.active,.cat-btn:hover{background:var(--brown);color:var(--cream);border-color:var(--brown);}
 
-  .cart-btn {
-    background:var(--amber); border:none; border-radius:50px;
-    padding:9px 16px; font-family:'DM Sans',sans-serif;
-    font-weight:700; font-size:13px; color:var(--brown);
-    cursor:pointer; display:flex; align-items:center; gap:7px;
-    transition: background .2s;
-  }
-  .cart-btn:hover { background:var(--amber-light); }
-  .cart-count {
-    background:var(--red); color:#fff; border-radius:50%;
-    width:19px; height:19px; font-size:10px;
-    display:flex; align-items:center; justify-content:center; font-weight:700;
-  }
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:9px 10px 120px;}
+@media(min-width:560px){.grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:860px){.grid{grid-template-columns:repeat(4,1fr);}}
+.card{background:var(--card);border-radius:13px;overflow:hidden;box-shadow:0 2px 8px rgba(44,26,14,.10);transition:transform .2s,box-shadow .2s;animation:fadeUp .35s ease both;}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(44,26,14,.16);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card-img{width:100%;height:125px;background:#F0EAE0;display:flex;align-items:center;justify-content:center;font-size:44px;}
+.card-body{padding:8px 10px 10px;}
+.card-name{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;line-height:1.2;margin-bottom:2px;}
+.card-desc{font-size:11px;color:var(--gray);margin-bottom:6px;}
+.card-price{font-size:15px;font-weight:700;color:var(--green);margin-bottom:8px;}
+.card-price span{font-size:10px;font-weight:400;color:var(--gray);}
+.qty-row{display:flex;align-items:center;border:2px solid var(--brown);border-radius:50px;overflow:hidden;}
+.qty-btn{background:var(--brown);color:var(--cream);border:none;width:28px;height:28px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
+.qty-btn:hover{background:var(--green);}
+.qty-num{flex:1;text-align:center;font-weight:700;font-size:12px;}
+.qty-sub{font-size:10px;color:var(--green);font-weight:600;text-align:right;margin-top:3px;min-height:14px;}
 
-  /* horario strip */
-  .horario-strip {
-    background: rgba(255,255,255,0.07);
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding: 7px 0;
-    text-align:center;
-    font-size:12px; color:rgba(255,255,255,0.55);
-    letter-spacing:0.3px;
-  }
-  .horario-strip strong { color:var(--amber-light); }
+/* ── CART PANEL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;}
+.overlay.open{display:block;}
+.cart-panel{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-radius:22px 22px 0 0;z-index:300;max-height:87vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);box-shadow:0 -6px 30px rgba(0,0,0,.22);}
+.cart-panel.open{transform:translateY(0);}
+.ph{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.pt{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;}
+.xbtn{background:var(--border);border:none;width:28px;height:28px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.citems{overflow-y:auto;flex:1;padding:8px 16px;}
+.cempty{text-align:center;padding:30px 0;color:var(--gray);font-size:14px;}
+.citem{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);}
+.cem{font-size:23px;} .ci{flex:1;}
+.cn{font-weight:600;font-size:13px;} .cq{font-size:11px;color:var(--gray);}
+.cp{font-weight:700;color:var(--green);font-size:13px;}
+.cdel{background:none;border:none;color:var(--red);font-size:16px;cursor:pointer;}
+.pf{padding:12px 16px 20px;border-top:1px solid var(--border);}
+.trow{display:flex;justify-content:space-between;font-size:16px;font-weight:700;margin-bottom:12px;}
+.cform{display:flex;flex-direction:column;gap:7px;margin-bottom:11px;}
+.cform input,.cform select,.cform textarea{border:2px solid var(--border);border-radius:10px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--brown);background:var(--cream);outline:none;transition:border-color .2s;resize:none;}
+.cform input.ei,.cform select.ei{border-color:var(--red);}
+.cform input:focus,.cform select:focus,.cform textarea:focus{border-color:var(--green);}
+.ferr{font-size:10px;color:var(--red);margin-top:-3px;}
+.wa-btn{width:100%;background:#25D366;color:#fff;border:none;border-radius:12px;padding:13px;font-family:'Playfair Display',serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;}
+.wa-btn:hover{background:#1DA856;} .wa-btn:disabled{background:#aaa;cursor:not-allowed;}
 
-  /* ── CERRADO BANNER ── */
-  #cerradoBanner {
-    display:none;
-    background: #4d1a1a;
-    color:#f5c5c5;
-    text-align:center;
-    padding:14px 20px;
-    font-size:14px;
-    font-weight:500;
-    border-bottom:2px solid #7a2222;
-  }
-  #cerradoBanner strong { color:#f08080; }
+/* ── MY ORDERS ── */
+.ow{padding:14px 13px 100px;max-width:600px;margin:0 auto;}
+.otitle{font-family:'Playfair Display',serif;font-size:21px;font-weight:900;margin-bottom:14px;}
+.ocard{background:var(--card);border-radius:13px;padding:13px 15px;margin-bottom:11px;box-shadow:0 2px 8px rgba(44,26,14,.08);animation:fadeUp .3s ease both;}
+.otop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:7px;}
+.oid{font-weight:700;font-size:13px;color:var(--brown2);}
+.odate{font-size:11px;color:var(--gray);}
+.ostatus{display:inline-block;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:700;}
+.sPendiente{background:#fff3e0;color:#e65100;}
+.sPreparando{background:#e8f5e9;color:#2e7d32;}
+.sListo{background:#e3f2fd;color:#1565c0;}
+.sEntregado{background:#f3e5f5;color:#6a1b9a;}
+.oitems{font-size:12px;color:var(--gray);margin-bottom:7px;line-height:1.7;}
+.ofooter{display:flex;justify-content:space-between;align-items:center;padding-top:7px;border-top:1px solid var(--border);}
+.ototal{font-weight:700;color:var(--green);font-size:14px;}
+.opago{font-size:11px;color:var(--gray);}
+.oempty{text-align:center;padding:60px 0;color:var(--gray);}
 
-  /* ── CATEGORIES ── */
-  .categories {
-    display:flex; gap:8px; padding:14px 14px 6px;
-    overflow-x:auto; scrollbar-width:none;
-  }
-  .categories::-webkit-scrollbar { display:none; }
-  .cat-btn {
-    border:2px solid var(--brown2); background:transparent;
-    padding:6px 15px; border-radius:50px;
-    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600;
-    color:var(--brown2); cursor:pointer; white-space:nowrap;
-    transition:all .2s;
-  }
-  .cat-btn.active, .cat-btn:hover { background:var(--brown); color:var(--cream); border-color:var(--brown); }
-
-  /* ── GRID ── */
-  .grid {
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:11px; padding:10px 11px 130px;
-  }
-  @media(min-width:560px){ .grid{ grid-template-columns:repeat(3,1fr); } }
-  @media(min-width:860px){ .grid{ grid-template-columns:repeat(4,1fr); } }
-
-  .card {
-    background:var(--card); border-radius:14px;
-    overflow:hidden; box-shadow:0 2px 8px rgba(44,26,14,0.10);
-    transition:transform .2s, box-shadow .2s;
-    animation:fadeUp .35s ease both;
-  }
-  .card:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(44,26,14,0.16); }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-  .card-img {
-    width:100%; height:140px; background:#F0EAE0;
-    display:flex; align-items:center; justify-content:center;
-    font-size:50px; overflow:hidden; position:relative;
-  }
-  .card-img img { width:100%; height:100%; object-fit:contain; padding:8px; transition:transform .3s; }
-  .card:hover .card-img img { transform:scale(1.06); }
-
-  .card-body { padding:9px 11px 11px; }
-  .card-name { font-family:'Playfair Display',serif; font-size:14px; font-weight:700; line-height:1.2; margin-bottom:2px; }
-  .card-desc { font-size:11px; color:var(--gray); margin-bottom:7px; }
-  .card-price { font-size:16px; font-weight:700; color:var(--green); margin-bottom:9px; }
-  .card-price span { font-size:11px; font-weight:400; color:var(--gray); }
-
-  .qty-row {
-    display:flex; align-items:center;
-    border:2px solid var(--brown); border-radius:50px; overflow:hidden;
-  }
-  .qty-btn {
-    background:var(--brown); color:var(--cream);
-    border:none; width:30px; height:30px; font-size:17px;
-    cursor:pointer; display:flex; align-items:center; justify-content:center;
-    transition:background .15s; flex-shrink:0;
-  }
-  .qty-btn:hover { background:var(--green); }
-  .qty-num { flex:1; text-align:center; font-weight:700; font-size:13px; }
-  .qty-sub { font-size:11px; color:var(--green); font-weight:600; text-align:right; margin-top:4px; min-height:15px; }
-
-  /* ── CART PANEL ── */
-  .overlay {
-    display:none; position:fixed; inset:0;
-    background:rgba(0,0,0,0.55); z-index:200;
-  }
-  .overlay.open { display:block; }
-
-  .cart-panel {
-    position:fixed; bottom:0; left:0; right:0;
-    background:var(--card); border-radius:22px 22px 0 0;
-    z-index:300; max-height:85vh;
-    display:flex; flex-direction:column;
-    transform:translateY(100%);
-    transition:transform .32s cubic-bezier(.4,0,.2,1);
-    box-shadow:0 -6px 30px rgba(0,0,0,0.22);
-  }
-  .cart-panel.open { transform:translateY(0); }
-
-  .panel-header {
-    padding:16px 18px 12px;
-    display:flex; align-items:center; justify-content:space-between;
-    border-bottom:1px solid var(--border);
-  }
-  .panel-title { font-family:'Playfair Display',serif; font-size:19px; font-weight:700; }
-  .close-btn {
-    background:var(--border); border:none; width:30px; height:30px;
-    border-radius:50%; font-size:16px; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-  }
-
-  .cart-items { overflow-y:auto; flex:1; padding:10px 18px; }
-  .cart-empty { text-align:center; padding:36px 0; color:var(--gray); font-size:14px; }
-  .c-item {
-    display:flex; align-items:center; gap:10px;
-    padding:9px 0; border-bottom:1px solid var(--border);
-  }
-  .c-emoji { font-size:26px; }
-  .c-info { flex:1; }
-  .c-name { font-weight:600; font-size:13px; }
-  .c-qty  { font-size:12px; color:var(--gray); }
-  .c-price{ font-weight:700; color:var(--green); font-size:13px; }
-  .c-del  { background:none; border:none; color:var(--red); font-size:17px; cursor:pointer; padding:4px; }
-
-  .panel-footer {
-    padding:14px 18px 22px;
-    border-top:1px solid var(--border);
-  }
-  .total-row {
-    display:flex; justify-content:space-between;
-    font-size:17px; font-weight:700; margin-bottom:14px;
-  }
-
-  /* FORM */
-  .form { display:flex; flex-direction:column; gap:9px; margin-bottom:13px; }
-  .form input, .form select, .form textarea {
-    border:2px solid var(--border); border-radius:10px;
-    padding:10px 13px; font-family:'DM Sans',sans-serif;
-    font-size:13px; color:var(--brown); background:var(--cream);
-    outline:none; transition:border-color .2s; resize:none;
-  }
-  .form input:focus, .form select:focus, .form textarea:focus { border-color:var(--green); }
-  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
-
-  /* WHATSAPP BTN */
-  .wa-btn {
-    width:100%; background:#25D366; color:#fff; border:none;
-    border-radius:13px; padding:14px; font-family:'Playfair Display',serif;
-    font-size:16px; font-weight:700; cursor:pointer;
-    display:flex; align-items:center; justify-content:center; gap:9px;
-    transition:background .2s, transform .1s;
-  }
-  .wa-btn:hover { background:#1DA856; }
-  .wa-btn:active { transform:scale(.98); }
-  .wa-btn:disabled { background:#aaa; cursor:not-allowed; }
+/* ── ADMIN ── */
+.aw{padding:14px 13px 100px;max-width:700px;margin:0 auto;}
+.astats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.scard{background:var(--card);border-radius:12px;padding:13px;text-align:center;box-shadow:0 2px 8px rgba(44,26,14,.08);}
+.snum{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;}
+.slabel{font-size:11px;color:var(--gray);margin-top:2px;}
+.atitle{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;margin-bottom:13px;}
+.aocard{background:var(--card);border-radius:13px;padding:13px 15px;margin-bottom:11px;box-shadow:0 2px 8px rgba(44,26,14,.08);animation:fadeUp .3s ease both;}
+.aoh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;}
+.aoid{font-weight:700;font-size:13px;}
+.aoc{font-size:12px;color:var(--gray);margin-top:3px;}
+.aoi{font-size:12px;color:var(--gray);line-height:1.7;margin-bottom:8px;}
+.aof{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px;}
+.aoinfo{font-size:11px;color:var(--gray);}
+.aototal{font-weight:700;color:var(--green);font-size:13px;}
+.ssel{border:2px solid var(--border);border-radius:8px;padding:4px 9px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--brown);background:var(--cream);cursor:pointer;outline:none;}
+.noord{text-align:center;padding:60px 0;color:var(--gray);}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ══ AUTH ══ -->
+<div id="vAuth">
+<div class="auth-wrap">
+<div class="auth-card">
+  <div class="auth-logo">
+    <div class="auth-icon">🏪</div>
+    <span class="auth-name">La Taurina</span>
+    <span class="auth-sub">Almacén de Barrio</span>
+  </div>
+  <div class="auth-tabs">
+    <button class="auth-tab active" id="tabLBtn" onclick="switchTab('login')">Iniciar sesión</button>
+    <button class="auth-tab"        id="tabRBtn" onclick="switchTab('reg')">Registrarse</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="tabL">
+    <div class="field"><label>Email</label>
+      <input type="email" id="lE" placeholder="tu@email.com" oninput="ce('eLE')">
+      <span class="err" id="eLE"></span></div>
+    <div class="field"><label>Contraseña</label>
+      <input type="password" id="lP" placeholder="••••••" oninput="ce('eLP')">
+      <span class="err" id="eLP"></span></div>
+    <button class="btn-primary" onclick="login()">Entrar</button>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="tabR" style="display:none">
+    <div class="field"><label>Nombre completo</label>
+      <input type="text" id="rN" placeholder="Juan García" oninput="fL(this);ce('eRN')">
+      <span class="err" id="eRN"></span></div>
+    <div class="field"><label>Email</label>
+      <input type="email" id="rE" placeholder="tu@email.com" oninput="ce('eRE')">
+      <span class="err" id="eRE"></span></div>
+    <div class="field"><label>Teléfono</label>
+      <input type="tel" id="rT" placeholder="2235000000" maxlength="15" oninput="fN(this);ce('eRT')">
+      <span class="err" id="eRT"></span></div>
+    <div class="field"><label>Contraseña</label>
+      <input type="password" id="rP" placeholder="Mínimo 6 caracteres" oninput="ce('eRP')">
+      <span class="err" id="eRP"></span></div>
+    <div class="field"><label>Confirmar contraseña</label>
+      <input type="password" id="rP2" placeholder="Repetí tu contraseña" oninput="ce('eRP2')">
+      <span class="err" id="eRP2"></span></div>
+    <button class="btn-primary" onclick="register()">Crear cuenta</button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ══ STORE ══ -->
+<div id="vStore" style="display:none">
 <header>
-  <div class="header-top">
+  <div class="h-top">
     <div class="logo-area">
       <div class="logo-icon">🏪</div>
-      <div class="logo-text">
-        <div class="logo-name">La Taurina</div>
-        <div class="logo-sub">Almacén de barrio</div>
-      </div>
+      <div><div class="logo-name">La Taurina</div><div class="logo-sub">Almacén de barrio</div></div>
     </div>
-    <div class="header-right">
-      <div class="horario-badge" id="horarioBadge">
-        <div class="horario-dot"></div>
-        <span id="horarioTxt">—</span>
-      </div>
-      <button class="cart-btn" onclick="openCart()">
-        🛒 <div class="cart-count" id="cartCount">0</div>
-      </button>
+    <div class="h-right">
+      <div class="hbadge" id="hB"><div class="hdot"></div><span id="hT">—</span></div>
+      <button class="cart-btn" onclick="openCart()">🛒 <div class="cart-count" id="cartCount">0</div></button>
     </div>
   </div>
-  <div class="horario-strip">
-    Pedidos online: <strong>9:30 hs — 14:00 hs</strong> · Lunes a Sábados
+  <div class="user-strip">
+    <span class="user-name">👋 Hola, <strong id="hUN"></strong></span>
+    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
   </div>
+  <div class="bnav">
+    <button class="nbtn active" id="nT" onclick="showSec('tienda')"><span class="ni">🏪</span>Tienda</button>
+    <button class="nbtn"        id="nP" onclick="showSec('pedidos')"><span class="ni">📋</span>Mis Pedidos</button>
+  </div>
+  <div class="h-strip">Pedidos: <strong>9:30 — 14:00 hs</strong> · Lunes a Sábados</div>
 </header>
+<div id="cerradoBanner">⏰ <strong>Estamos cerrados.</strong> Pedidos de 9:30 a 14:00 hs.</div>
 
-<!-- BANNER CERRADO -->
-<div id="cerradoBanner">
-  ⏰ <strong>Estamos cerrados.</strong> El horario de pedidos es de 9:30 a 14:00 hs. ¡Volvé en ese horario!
+<div id="sT">
+  <div class="cats">
+    <button class="cat-btn active" onclick="fCat('all',this)">Todos</button>
+    <button class="cat-btn" onclick="fCat('lacteos',this)">🥛 Lácteos</button>
+    <button class="cat-btn" onclick="fCat('fiambres',this)">🥩 Fiambres</button>
+    <button class="cat-btn" onclick="fCat('verduras',this)">🥬 Verduras</button>
+    <button class="cat-btn" onclick="fCat('bebidas',this)">🥤 Bebidas</button>
+    <button class="cat-btn" onclick="fCat('limpieza',this)">🧹 Limpieza</button>
+    <button class="cat-btn" onclick="fCat('almacen',this)">🫙 Almacén</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+<div id="sP" style="display:none">
+  <div class="ow"><div class="otitle">📋 Mis Pedidos</div><div id="myOrders"></div></div>
+</div>
 </div>
 
-<!-- CATEGORÍAS -->
-<div class="categories">
-  <button class="cat-btn active" onclick="filterCat('all',this)">Todos</button>
-  <button class="cat-btn" onclick="filterCat('lacteos',this)">🥛 Lácteos</button>
-  <button class="cat-btn" onclick="filterCat('fiambres',this)">🥩 Fiambres</button>
-  <button class="cat-btn" onclick="filterCat('verduras',this)">🥬 Verduras</button>
-  <button class="cat-btn" onclick="filterCat('bebidas',this)">🥤 Bebidas</button>
-  <button class="cat-btn" onclick="filterCat('limpieza',this)">🧹 Limpieza</button>
-  <button class="cat-btn" onclick="filterCat('almacen',this)">🫙 Almacén</button>
-</div>
-
-<!-- GRILLA -->
-<div class="grid" id="productGrid"></div>
-
-<!-- OVERLAY -->
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
-
-<!-- CART PANEL -->
-<div class="cart-panel" id="cartPanel">
-  <div class="panel-header">
-    <div class="panel-title">🛒 Tu Pedido</div>
-    <button class="close-btn" onclick="closeCart()">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty">Tu carrito está vacío</div>
-  </div>
-  <div class="panel-footer">
-    <div class="total-row">
-      <span>Total estimado</span>
-      <span id="cartTotal">$0</span>
+<!-- ══ ADMIN ══ -->
+<div id="vAdmin" style="display:none">
+<header>
+  <div class="h-top">
+    <div class="logo-area">
+      <div class="logo-icon">🏪</div>
+      <div><div class="logo-name">La Taurina</div><div class="logo-sub">Panel de administración</div></div>
     </div>
-    <div class="form">
-      <div class="form-row">
-        <input type="text" id="fNombre" placeholder="Tu nombre *">
-        <input type="tel"  id="fTel"    placeholder="Tu teléfono *">
-      </div>
-      <input type="text" id="fDir" placeholder="Tu dirección (calle y número) *">
-      <textarea id="fNota" rows="2" placeholder="Aclaraciones (ej: sin TACC, corte especial...)"></textarea>
-      <select id="fPago">
+    <div class="h-right">
+      <button class="logout-btn" style="color:var(--amber-l);font-size:13px;font-family:'DM Sans',sans-serif" onclick="logout()">Cerrar sesión</button>
+    </div>
+  </div>
+  <div class="user-strip"><span class="user-name">⚙️ <strong>Modo Admin</strong></span></div>
+</header>
+<div class="aw">
+  <div class="astats" id="aStats"></div>
+  <div class="atitle">Pedidos recibidos</div>
+  <div id="aOrders"></div>
+</div>
+</div>
+
+<!-- OVERLAY + CART -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="ph"><div class="pt">🛒 Tu Pedido</div><button class="xbtn" onclick="closeCart()">✕</button></div>
+  <div class="citems" id="cItems"></div>
+  <div class="pf">
+    <div class="trow"><span>Total estimado</span><span id="cTotal">$0</span></div>
+    <div class="cform">
+      <input type="text" id="fDir" placeholder="Dirección (calle y número) *" oninput="cfe('eDi')">
+      <span class="ferr" id="eDi"></span>
+      <textarea id="fNota" rows="2" placeholder="Aclaraciones (opcional)"></textarea>
+      <select id="fPago" onchange="cfe('ePa')">
         <option value="">Forma de pago *</option>
         <option>Efectivo</option>
         <option>Transferencia bancaria</option>
@@ -313,189 +276,270 @@
         <option>Tarjeta de crédito</option>
         <option>Mercado Pago</option>
       </select>
+      <span class="ferr" id="ePa"></span>
     </div>
-    <button class="wa-btn" id="waBtnMain" onclick="sendWhatsApp()">
-      📲 &nbsp;Enviar pedido por WhatsApp
-    </button>
+    <button class="wa-btn" id="waBtn" onclick="sendOrder()">📲 &nbsp;Enviar pedido por WhatsApp</button>
   </div>
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────
-const WA_NUMBER  = "5492235000000"; // ← reemplazar con número real
-const STORE_NAME = "Almacén La Taurina";
-const OPEN_H  = 9, OPEN_M  = 30;
-const CLOSE_H = 14, CLOSE_M = 0;
+// ── CONFIG ────────────────────────────────────────
+const WA   = "5492235000000";
+const AMAIL= "admin@lataurina.com";
+const APASS= "Taurina2025";
+const OH=9,OM=30,CH=14,CM=0;
 
-// ── PRODUCTOS DE EJEMPLO (reemplazar con lista real) ─
-const products = [
-  { id:1,  name:"Leche Entera",          desc:"Sachet 1 litro",   price:850,  cat:"lacteos",  emoji:"🥛" },
-  { id:2,  name:"Queso Cremoso",          desc:"Por 100g",         price:650,  cat:"lacteos",  emoji:"🧀" },
-  { id:3,  name:"Yogur Natural",          desc:"Pote 190g",        price:480,  cat:"lacteos",  emoji:"🥣" },
-  { id:4,  name:"Jamón Cocido",           desc:"Por 100g",         price:780,  cat:"fiambres", emoji:"🥩" },
-  { id:5,  name:"Salame Milán",           desc:"Por 100g",         price:920,  cat:"fiambres", emoji:"🍖" },
-  { id:6,  name:"Tomate",                 desc:"Por kilo",         price:1100, cat:"verduras", emoji:"🍅" },
-  { id:7,  name:"Lechuga",                desc:"Por unidad",       price:650,  cat:"verduras", emoji:"🥬" },
-  { id:8,  name:"Papa",                   desc:"Por kilo",         price:700,  cat:"verduras", emoji:"🥔" },
-  { id:9,  name:"Agua Mineral",           desc:"Botella 2.25L",    price:550,  cat:"bebidas",  emoji:"💧" },
-  { id:10, name:"Gaseosa Cola",           desc:"Botella 2.25L",    price:950,  cat:"bebidas",  emoji:"🥤" },
-  { id:11, name:"Lavandina",              desc:"Botella 1L",       price:420,  cat:"limpieza", emoji:"🧹" },
-  { id:12, name:"Detergente",             desc:"Botella 750ml",    price:680,  cat:"limpieza", emoji:"🫧" },
-  { id:13, name:"Arroz",                  desc:"Bolsa 1kg",        price:890,  cat:"almacen",  emoji:"🍚" },
-  { id:14, name:"Fideos Spaghetti",       desc:"Paquete 500g",     price:620,  cat:"almacen",  emoji:"🍝" },
-  { id:15, name:"Aceite de Girasol",      desc:"Botella 900ml",    price:1450, cat:"almacen",  emoji:"🫙" },
+// ── PRODUCTOS ─────────────────────────────────────
+const prods = [
+  {id:1, name:"Leche Entera",      desc:"Sachet 1 litro",  price:850,  cat:"lacteos",  e:"🥛"},
+  {id:2, name:"Queso Cremoso",     desc:"Por 100g",        price:650,  cat:"lacteos",  e:"🧀"},
+  {id:3, name:"Yogur Natural",     desc:"Pote 190g",       price:480,  cat:"lacteos",  e:"🥣"},
+  {id:4, name:"Jamón Cocido",      desc:"Por 100g",        price:780,  cat:"fiambres", e:"🥩"},
+  {id:5, name:"Salame Milán",      desc:"Por 100g",        price:920,  cat:"fiambres", e:"🍖"},
+  {id:6, name:"Tomate",            desc:"Por kilo",        price:1100, cat:"verduras", e:"🍅"},
+  {id:7, name:"Lechuga",           desc:"Por unidad",      price:650,  cat:"verduras", e:"🥬"},
+  {id:8, name:"Papa",              desc:"Por kilo",        price:700,  cat:"verduras", e:"🥔"},
+  {id:9, name:"Agua Mineral",      desc:"Botella 2.25L",   price:550,  cat:"bebidas",  e:"💧"},
+  {id:10,name:"Gaseosa Cola",      desc:"Botella 2.25L",   price:950,  cat:"bebidas",  e:"🥤"},
+  {id:11,name:"Lavandina",         desc:"Botella 1L",      price:420,  cat:"limpieza", e:"🧹"},
+  {id:12,name:"Detergente",        desc:"Botella 750ml",   price:680,  cat:"limpieza", e:"🫧"},
+  {id:13,name:"Arroz",             desc:"Bolsa 1kg",       price:890,  cat:"almacen",  e:"🍚"},
+  {id:14,name:"Fideos Spaghetti",  desc:"Paquete 500g",    price:620,  cat:"almacen",  e:"🍝"},
+  {id:15,name:"Aceite de Girasol", desc:"Botella 900ml",   price:1450, cat:"almacen",  e:"🫙"},
 ];
 
-// ── HORARIO ──────────────────────────────────────────
-function isOpen() {
-  const now = new Date();
-  const mins = now.getHours() * 60 + now.getMinutes();
-  const open  = OPEN_H  * 60 + OPEN_M;
-  const close = CLOSE_H * 60 + CLOSE_M;
-  return mins >= open && mins < close;
+// ── STORAGE ───────────────────────────────────────
+const gU  = ()=> JSON.parse(localStorage.getItem('lt_u')||'[]');
+const gO  = ()=> JSON.parse(localStorage.getItem('lt_o')||'[]');
+const sU  = v => localStorage.setItem('lt_u', JSON.stringify(v));
+const sO  = v => localStorage.setItem('lt_o', JSON.stringify(v));
+const gCU = ()=> JSON.parse(localStorage.getItem('lt_cu')||'null');
+const sCU = v => localStorage.setItem('lt_cu', JSON.stringify(v));
+
+// ── STATE ─────────────────────────────────────────
+let cu = gCU(), cart={}, aCat='all';
+const $  = id => document.getElementById(id);
+const fm = n  => '$'+n.toLocaleString('es-AR');
+
+// ── INPUT FILTERS ─────────────────────────────────
+function fL(el){el.value=el.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g,'');}
+function fN(el){el.value=el.value.replace(/\D/g,'');}
+
+// ── ERRORS ───────────────────────────────────────
+function ce(id){const e=$(id);if(e)e.textContent='';}
+function cfe(id){const e=$(id);if(e)e.textContent='';}
+function se(id,m){const e=$(id);if(e)e.textContent=m;}
+
+// ── VIEW ──────────────────────────────────────────
+function showView(v){['vAuth','vStore','vAdmin'].forEach(id=>$(id).style.display='none');$(v).style.display='block';}
+
+// ── HORARIO ───────────────────────────────────────
+function isOpen(){const n=new Date(),m=n.getHours()*60+n.getMinutes();return m>=OH*60+OM&&m<CH*60+CM;}
+function checkH(){
+  const o=isOpen();
+  const b=$('hB'); if(!b)return;
+  b.className='hbadge '+(o?'ab':'ce');
+  $('hT').textContent=o?'Abierto':'Cerrado';
+  $('cerradoBanner').style.display=o?'none':'block';
+  const wb=$('waBtn');
+  if(wb){wb.disabled=!o;wb.innerHTML=o?'📲 &nbsp;Enviar pedido por WhatsApp':'⏰ &nbsp;Fuera de horario';}
 }
-function checkHorario() {
-  const badge = document.getElementById('horarioBadge');
-  const txt   = document.getElementById('horarioTxt');
-  const banner= document.getElementById('cerradoBanner');
-  const waBtn = document.getElementById('waBtnMain');
-  if (isOpen()) {
-    badge.className = 'horario-badge abierto';
-    txt.textContent = 'Abierto';
-    banner.style.display = 'none';
-    waBtn.disabled = false;
-  } else {
-    badge.className = 'horario-badge cerrado';
-    txt.textContent = 'Cerrado';
-    banner.style.display = 'block';
-    waBtn.disabled = true;
-    waBtn.textContent = '⏰  Fuera de horario';
-  }
+
+// ── AUTH ──────────────────────────────────────────
+function switchTab(t){
+  $('tabL').style.display   =t==='login'?'block':'none';
+  $('tabR').style.display   =t==='reg'  ?'block':'none';
+  $('tabLBtn').classList.toggle('active',t==='login');
+  $('tabRBtn').classList.toggle('active',t==='reg');
 }
-checkHorario();
-setInterval(checkHorario, 60000);
+const reM=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const reN=/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
-// ── ESTADO ───────────────────────────────────────────
-const cart = {};
-let activeCat = 'all';
+function login(){
+  const em=$('lE').value.trim().toLowerCase(), pw=$('lP').value;
+  let ok=true;
+  if(!reM.test(em)){se('eLE','Ingresá un email válido.');ok=false;}
+  if(!pw){se('eLP','Ingresá tu contraseña.');ok=false;}
+  if(!ok)return;
+  if(em===AMAIL&&pw===APASS){cu={email:AMAIL,nombre:'Admin',role:'admin'};sCU(cu);initAdmin();return;}
+  const u=gU().find(u=>u.email===em&&u.pass===pw);
+  if(!u){se('eLP','Email o contraseña incorrectos.');return;}
+  cu=u; sCU(u); initStore();
+}
 
-const $ = id => document.getElementById(id);
-const fmt = n => '$' + n.toLocaleString('es-AR');
+function register(){
+  const n=$('rN').value.trim(),em=$('rE').value.trim().toLowerCase();
+  const t=$('rT').value.trim(),pw=$('rP').value,pw2=$('rP2').value;
+  let ok=true;
+  if(!n||!reN.test(n)){se('eRN','Solo letras y espacios.');ok=false;}
+  if(!reM.test(em)){se('eRE','Ingresá un email válido.');ok=false;}
+  if(!/^\d{8,15}$/.test(t)){se('eRT','Solo números (8 a 15 dígitos).');ok=false;}
+  if(pw.length<6){se('eRP','Mínimo 6 caracteres.');ok=false;}
+  if(pw!==pw2){se('eRP2','Las contraseñas no coinciden.');ok=false;}
+  if(!ok)return;
+  const us=gU();
+  if(us.find(u=>u.email===em)){se('eRE','Ese email ya está registrado.');return;}
+  if(em===AMAIL){se('eRE','Email no permitido.');return;}
+  const u={nombre:n,email:em,tel:t,pass:pw,role:'customer'};
+  us.push(u); sU(us); cu=u; sCU(u); initStore();
+}
 
-// ── GRID ─────────────────────────────────────────────
-function renderGrid(cat) {
-  const items = cat === 'all' ? products : products.filter(p => p.cat === cat);
-  $('productGrid').innerHTML = items.map((p, i) => `
+function logout(){cu=null;localStorage.removeItem('lt_cu');cart={};showView('vAuth');}
+
+// ── INIT ──────────────────────────────────────────
+function initStore(){
+  showView('vStore');
+  $('hUN').textContent=cu.nombre;
+  checkH(); setInterval(checkH,60000);
+  renderGrid('all'); showSec('tienda');
+}
+function initAdmin(){showView('vAdmin');renderAdmin();}
+
+// ── SECTIONS ─────────────────────────────────────
+function showSec(s){
+  $('sT').style.display=s==='tienda' ?'block':'none';
+  $('sP').style.display=s==='pedidos'?'block':'none';
+  $('nT').classList.toggle('active',s==='tienda');
+  $('nP').classList.toggle('active',s==='pedidos');
+  if(s==='pedidos')renderMyOrders();
+}
+
+// ── GRID ──────────────────────────────────────────
+function renderGrid(cat){
+  aCat=cat;
+  const items=cat==='all'?prods:prods.filter(p=>p.cat===cat);
+  $('grid').innerHTML=items.map((p,i)=>`
     <div class="card" style="animation-delay:${i*.04}s">
-      <div class="card-img">${p.img
-        ? `<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='${p.emoji}'">`
-        : p.emoji}</div>
+      <div class="card-img">${p.e}</div>
       <div class="card-body">
         <div class="card-name">${p.name}</div>
         <div class="card-desc">${p.desc}</div>
-        <div class="card-price">${fmt(p.price)} <span>/ ${p.desc.startsWith('Por') ? p.desc.toLowerCase() : 'unidad'}</span></div>
+        <div class="card-price">${fm(p.price)} <span>/ unidad</span></div>
         <div class="qty-row">
-          <button class="qty-btn" onclick="chQty(${p.id},-1)">−</button>
-          <div class="qty-num" id="qty-${p.id}">${cart[p.id]?.qty||0}</div>
-          <button class="qty-btn" onclick="chQty(${p.id},1)">+</button>
+          <button class="qty-btn" onclick="chQ(${p.id},-1)">−</button>
+          <div class="qty-num" id="q${p.id}">${cart[p.id]?.qty||0}</div>
+          <button class="qty-btn" onclick="chQ(${p.id},1)">+</button>
         </div>
-        <div class="qty-sub" id="sub-${p.id}">${cart[p.id]?.qty ? fmt(p.price*cart[p.id].qty) : ''}</div>
+        <div class="qty-sub" id="s${p.id}">${cart[p.id]?.qty?fm(p.price*cart[p.id].qty):''}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
+}
+function fCat(cat,btn){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); renderGrid(cat);
+}
+function chQ(id,d){
+  const p=prods.find(x=>x.id===id);
+  if(!cart[id])cart[id]={...p,qty:0};
+  cart[id].qty=Math.max(0,cart[id].qty+d);
+  if(!cart[id].qty)delete cart[id];
+  const n=$('q'+id),s=$('s'+id);
+  if(n)n.textContent=cart[id]?.qty||0;
+  if(s)s.textContent=cart[id]?.qty?fm(p.price*cart[id].qty):'';
+  $('cartCount').textContent=Object.values(cart).reduce((s,i)=>s+i.qty,0);
 }
 
-function chQty(id, d) {
-  const p = products.find(x => x.id === id);
-  if (!cart[id]) cart[id] = {...p, qty:0};
-  cart[id].qty = Math.max(0, cart[id].qty + d);
-  if (!cart[id].qty) delete cart[id];
-  $('qty-'+id).textContent = cart[id]?.qty || 0;
-  const s = $('sub-'+id);
-  if (s) s.textContent = cart[id]?.qty ? fmt(p.price * cart[id].qty) : '';
-  updateCount();
+// ── CART ─────────────────────────────────────────
+function openCart(){$('overlay').classList.add('open');$('cartPanel').classList.add('open');renderCart();}
+function closeCart(){$('overlay').classList.remove('open');$('cartPanel').classList.remove('open');}
+function renderCart(){
+  const items=Object.values(cart),c=$('cItems');
+  if(!items.length){c.innerHTML='<div class="cempty">Tu carrito está vacío 🛒</div>';$('cTotal').textContent='$0';return;}
+  c.innerHTML=items.map(i=>`
+    <div class="citem">
+      <div class="cem">${i.e}</div>
+      <div class="ci"><div class="cn">${i.name}</div><div class="cq">${i.qty} × ${fm(i.price)}</div></div>
+      <div class="cp">${fm(i.price*i.qty)}</div>
+      <button class="cdel" onclick="delItem(${i.id})">✕</button>
+    </div>`).join('');
+  $('cTotal').textContent=fm(items.reduce((s,i)=>s+i.price*i.qty,0));
+}
+function delItem(id){delete cart[id];$('cartCount').textContent=Object.values(cart).reduce((s,i)=>s+i.qty,0);renderCart();renderGrid(aCat);}
+
+// ── SEND ORDER ────────────────────────────────────
+function sendOrder(){
+  if(!isOpen()){alert('Pedidos de 9:30 a 14:00 hs.');return;}
+  const items=Object.values(cart);
+  if(!items.length){alert('Agregá productos al carrito primero.');return;}
+  const dir=$('fDir').value.trim(),pago=$('fPago').value,nota=$('fNota').value.trim();
+  let ok=true;
+  if(dir.length<5){se('eDi','Ingresá tu dirección completa.');ok=false;}
+  if(!pago){se('ePa','Seleccioná la forma de pago.');ok=false;}
+  if(!ok)return;
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  const oid='ORD-'+Date.now().toString().slice(-6);
+  const order={id:oid,userId:cu.email,userName:cu.nombre,userTel:cu.tel,address:dir,payment:pago,note:nota,
+    items:items.map(i=>({name:i.name,qty:i.qty,price:i.price,e:i.e})),total,status:'Pendiente',date:new Date().toISOString()};
+  const ords=gO(); ords.unshift(order); sO(ords);
+  let msg=`🏪 *Pedido ${oid} — Almacén La Taurina*\n\n`;
+  msg+=`👤 *Cliente:* ${cu.nombre}\n📞 *Tel:* ${cu.tel}\n📍 *Dirección:* ${dir}\n💳 *Pago:* ${pago}\n`;
+  if(nota)msg+=`📝 *Nota:* ${nota}\n`;
+  msg+=`\n🛒 *Productos:*\n`;
+  items.forEach(i=>msg+=`• ${i.name} × ${i.qty} = ${fm(i.price*i.qty)}\n`);
+  msg+=`\n💰 *Total: ${fm(total)}*`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
+  cart={}; $('cartCount').textContent=0; closeCart(); renderGrid(aCat);
 }
 
-function filterCat(cat, btn) {
-  activeCat = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderGrid(cat);
+// ── MY ORDERS ─────────────────────────────────────
+function renderMyOrders(){
+  const mine=gO().filter(o=>o.userId===cu.email);
+  $('myOrders').innerHTML=!mine.length
+    ?'<div class="oempty">Todavía no hiciste ningún pedido 🛒</div>'
+    :mine.map(o=>`
+      <div class="ocard">
+        <div class="otop">
+          <div><div class="oid">${o.id}</div><div class="odate">${fd(o.date)}</div></div>
+          <span class="ostatus s${o.status.replace(/\s/g,'')}">${o.status}</span>
+        </div>
+        <div class="oitems">${o.items.map(i=>`${i.e} ${i.name} × ${i.qty}`).join(' · ')}</div>
+        <div class="ofooter"><span class="opago">💳 ${o.payment}</span><span class="ototal">${fm(o.total)}</span></div>
+      </div>`).join('');
 }
 
-function updateCount() {
-  $('cartCount').textContent = Object.values(cart).reduce((s,i)=>s+i.qty,0);
+// ── ADMIN ─────────────────────────────────────────
+function renderAdmin(){
+  const ords=gO();
+  const tot=ords.reduce((s,o)=>s+o.total,0);
+  const pend=ords.filter(o=>o.status==='Pendiente').length;
+  $('aStats').innerHTML=`
+    <div class="scard"><div class="snum">${ords.length}</div><div class="slabel">Pedidos totales</div></div>
+    <div class="scard"><div class="snum">${pend}</div><div class="slabel">Pendientes</div></div>
+    <div class="scard"><div class="snum">${fm(tot)}</div><div class="slabel">Facturado</div></div>`;
+  $('aOrders').innerHTML=!ords.length
+    ?'<div class="noord">No hay pedidos todavía.</div>'
+    :ords.map((o,i)=>`
+      <div class="aocard">
+        <div class="aoh">
+          <div>
+            <div class="aoid">${o.id} <span class="ostatus s${o.status.replace(/\s/g,'')}">${o.status}</span></div>
+            <div class="aoc">👤 ${o.userName} · 📞 ${o.userTel||'—'} · 📍 ${o.address}</div>
+            <div class="aoc">${fd(o.date)}</div>
+          </div>
+        </div>
+        <div class="aoi">${o.items.map(i=>`${i.e} ${i.name} × ${i.qty} = ${fm(i.price*i.qty)}`).join('<br>')}</div>
+        <div class="aof">
+          <span class="aoinfo">💳 ${o.payment}${o.note?' · 📝 '+o.note:''}</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="aototal">${fm(o.total)}</span>
+            <select class="ssel" onchange="updSt(${i},this.value)">
+              ${['Pendiente','Preparando','Listo','Entregado'].map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      </div>`).join('');
+}
+function updSt(i,v){const o=gO();o[i].status=v;sO(o);renderAdmin();}
+
+// ── DATE FORMAT ───────────────────────────────────
+function fd(iso){
+  const d=new Date(iso);
+  return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+
+         d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
 }
 
-// ── CART PANEL ───────────────────────────────────────
-function openCart() {
-  $('overlay').classList.add('open');
-  $('cartPanel').classList.add('open');
-  renderCartItems();
-}
-function closeCart() {
-  $('overlay').classList.remove('open');
-  $('cartPanel').classList.remove('open');
-}
-function renderCartItems() {
-  const items = Object.values(cart);
-  const container = $('cartItems');
-  if (!items.length) {
-    container.innerHTML = '<div class="cart-empty">Tu carrito está vacío 🛒</div>';
-    $('cartTotal').textContent = '$0';
-    return;
-  }
-  container.innerHTML = items.map(i => `
-    <div class="c-item">
-      <div class="c-emoji">${i.emoji}</div>
-      <div class="c-info">
-        <div class="c-name">${i.name}</div>
-        <div class="c-qty">${i.qty} × ${fmt(i.price)}</div>
-      </div>
-      <div class="c-price">${fmt(i.price*i.qty)}</div>
-      <button class="c-del" onclick="removeItem(${i.id})">✕</button>
-    </div>
-  `).join('');
-  $('cartTotal').textContent = fmt(items.reduce((s,i)=>s+i.price*i.qty,0));
-}
-function removeItem(id) {
-  delete cart[id];
-  updateCount();
-  renderCartItems();
-  renderGrid(activeCat);
-}
-
-// ── WHATSAPP ─────────────────────────────────────────
-function sendWhatsApp() {
-  if (!isOpen()) { alert('El horario de pedidos es de 9:30 a 14:00 hs.'); return; }
-  const items = Object.values(cart);
-  if (!items.length) { alert('Agregá productos al carrito primero 🛒'); return; }
-  const nombre = $('fNombre').value.trim();
-  const tel    = $('fTel').value.trim();
-  const dir    = $('fDir').value.trim();
-  const pago   = $('fPago').value;
-  const nota   = $('fNota').value.trim();
-  if (!nombre) { alert('Por favor ingresá tu nombre.'); $('fNombre').focus(); return; }
-  if (!tel)    { alert('Por favor ingresá tu teléfono.'); $('fTel').focus(); return; }
-  if (!dir)    { alert('Por favor ingresá tu dirección.'); $('fDir').focus(); return; }
-  if (!pago)   { alert('Por favor seleccioná la forma de pago.'); $('fPago').focus(); return; }
-
-  const total = items.reduce((s,i)=>s+i.price*i.qty,0);
-  let msg = `🏪 *Pedido — ${STORE_NAME}*\n\n`;
-  msg += `👤 *Nombre:* ${nombre}\n`;
-  msg += `📞 *Teléfono:* ${tel}\n`;
-  msg += `📍 *Dirección:* ${dir}\n`;
-  msg += `💳 *Pago:* ${pago}\n`;
-  if (nota) msg += `📝 *Nota:* ${nota}\n`;
-  msg += `\n🛒 *Productos:*\n`;
-  items.forEach(i => msg += `• ${i.name} × ${i.qty} = ${fmt(i.price*i.qty)}\n`);
-  msg += `\n💰 *Total estimado: ${fmt(total)}*`;
-
-  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
-}
-
-// ── INIT ─────────────────────────────────────────────
-renderGrid('all');
+// ── BOOT ──────────────────────────────────────────
+cu ? (cu.role==='admin' ? initAdmin() : initStore()) : showView('vAuth');
 </script>
 </body>
 </html>
