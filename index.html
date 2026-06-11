@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almacén La Taurina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --brown: #2C1A0E;
+    --brown2: #5C3D1E;
+    --green: #2E6B3E;
+    --green-light: #4A9960;
+    --amber: #D4820A;
+    --amber-light: #F0A030;
+    --red: #B83232;
+    --gray: #8C7B6B;
+    --card: #FFFDF7;
+    --border: #E0D4C0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--brown); min-height:100vh; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--brown);
+    padding: 0 16px;
+    position: sticky; top:0; z-index:100;
+    box-shadow: 0 3px 16px rgba(0,0,0,0.35);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+  }
+  .logo-area { display:flex; align-items:center; gap:12px; }
+  .logo-icon {
+    width:44px; height:44px; background:var(--amber);
+    border-radius:10px; display:flex; align-items:center;
+    justify-content:center; font-size:22px;
+  }
+  .logo-text { line-height:1; }
+  .logo-name {
+    font-family:'Playfair Display',serif;
+    color:#fff; font-size:20px; font-weight:900; letter-spacing:-0.3px;
+  }
+  .logo-sub { color:var(--amber-light); font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; }
+
+  .header-right { display:flex; align-items:center; gap:10px; }
+
+  .horario-badge {
+    font-size:11px; font-weight:600; padding:5px 10px;
+    border-radius:50px; display:flex; align-items:center; gap:5px;
+  }
+  .horario-badge.abierto { background:#1a4d2a; color:#6fe89a; }
+  .horario-badge.cerrado { background:#4d1a1a; color:#f08080; }
+  .horario-dot { width:7px; height:7px; border-radius:50%; }
+  .horario-badge.abierto .horario-dot { background:#6fe89a; }
+  .horario-badge.cerrado .horario-dot { background:#f08080; }
+
+  .cart-btn {
+    background:var(--amber); border:none; border-radius:50px;
+    padding:9px 16px; font-family:'DM Sans',sans-serif;
+    font-weight:700; font-size:13px; color:var(--brown);
+    cursor:pointer; display:flex; align-items:center; gap:7px;
+    transition: background .2s;
+  }
+  .cart-btn:hover { background:var(--amber-light); }
+  .cart-count {
+    background:var(--red); color:#fff; border-radius:50%;
+    width:19px; height:19px; font-size:10px;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+
+  /* horario strip */
+  .horario-strip {
+    background: rgba(255,255,255,0.07);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 7px 0;
+    text-align:center;
+    font-size:12px; color:rgba(255,255,255,0.55);
+    letter-spacing:0.3px;
+  }
+  .horario-strip strong { color:var(--amber-light); }
+
+  /* ── CERRADO BANNER ── */
+  #cerradoBanner {
+    display:none;
+    background: #4d1a1a;
+    color:#f5c5c5;
+    text-align:center;
+    padding:14px 20px;
+    font-size:14px;
+    font-weight:500;
+    border-bottom:2px solid #7a2222;
+  }
+  #cerradoBanner strong { color:#f08080; }
+
+  /* ── CATEGORIES ── */
+  .categories {
+    display:flex; gap:8px; padding:14px 14px 6px;
+    overflow-x:auto; scrollbar-width:none;
+  }
+  .categories::-webkit-scrollbar { display:none; }
+  .cat-btn {
+    border:2px solid var(--brown2); background:transparent;
+    padding:6px 15px; border-radius:50px;
+    font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600;
+    color:var(--brown2); cursor:pointer; white-space:nowrap;
+    transition:all .2s;
+  }
+  .cat-btn.active, .cat-btn:hover { background:var(--brown); color:var(--cream); border-color:var(--brown); }
+
+  /* ── GRID ── */
+  .grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:11px; padding:10px 11px 130px;
+  }
+  @media(min-width:560px){ .grid{ grid-template-columns:repeat(3,1fr); } }
+  @media(min-width:860px){ .grid{ grid-template-columns:repeat(4,1fr); } }
+
+  .card {
+    background:var(--card); border-radius:14px;
+    overflow:hidden; box-shadow:0 2px 8px rgba(44,26,14,0.10);
+    transition:transform .2s, box-shadow .2s;
+    animation:fadeUp .35s ease both;
+  }
+  .card:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(44,26,14,0.16); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  .card-img {
+    width:100%; height:140px; background:#F0EAE0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:50px; overflow:hidden; position:relative;
+  }
+  .card-img img { width:100%; height:100%; object-fit:contain; padding:8px; transition:transform .3s; }
+  .card:hover .card-img img { transform:scale(1.06); }
+
+  .card-body { padding:9px 11px 11px; }
+  .card-name { font-family:'Playfair Display',serif; font-size:14px; font-weight:700; line-height:1.2; margin-bottom:2px; }
+  .card-desc { font-size:11px; color:var(--gray); margin-bottom:7px; }
+  .card-price { font-size:16px; font-weight:700; color:var(--green); margin-bottom:9px; }
+  .card-price span { font-size:11px; font-weight:400; color:var(--gray); }
+
+  .qty-row {
+    display:flex; align-items:center;
+    border:2px solid var(--brown); border-radius:50px; overflow:hidden;
+  }
+  .qty-btn {
+    background:var(--brown); color:var(--cream);
+    border:none; width:30px; height:30px; font-size:17px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:background .15s; flex-shrink:0;
+  }
+  .qty-btn:hover { background:var(--green); }
+  .qty-num { flex:1; text-align:center; font-weight:700; font-size:13px; }
+  .qty-sub { font-size:11px; color:var(--green); font-weight:600; text-align:right; margin-top:4px; min-height:15px; }
+
+  /* ── CART PANEL ── */
+  .overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.55); z-index:200;
+  }
+  .overlay.open { display:block; }
+
+  .cart-panel {
+    position:fixed; bottom:0; left:0; right:0;
+    background:var(--card); border-radius:22px 22px 0 0;
+    z-index:300; max-height:85vh;
+    display:flex; flex-direction:column;
+    transform:translateY(100%);
+    transition:transform .32s cubic-bezier(.4,0,.2,1);
+    box-shadow:0 -6px 30px rgba(0,0,0,0.22);
+  }
+  .cart-panel.open { transform:translateY(0); }
+
+  .panel-header {
+    padding:16px 18px 12px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid var(--border);
+  }
+  .panel-title { font-family:'Playfair Display',serif; font-size:19px; font-weight:700; }
+  .close-btn {
+    background:var(--border); border:none; width:30px; height:30px;
+    border-radius:50%; font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .cart-items { overflow-y:auto; flex:1; padding:10px 18px; }
+  .cart-empty { text-align:center; padding:36px 0; color:var(--gray); font-size:14px; }
+  .c-item {
+    display:flex; align-items:center; gap:10px;
+    padding:9px 0; border-bottom:1px solid var(--border);
+  }
+  .c-emoji { font-size:26px; }
+  .c-info { flex:1; }
+  .c-name { font-weight:600; font-size:13px; }
+  .c-qty  { font-size:12px; color:var(--gray); }
+  .c-price{ font-weight:700; color:var(--green); font-size:13px; }
+  .c-del  { background:none; border:none; color:var(--red); font-size:17px; cursor:pointer; padding:4px; }
+
+  .panel-footer {
+    padding:14px 18px 22px;
+    border-top:1px solid var(--border);
+  }
+  .total-row {
+    display:flex; justify-content:space-between;
+    font-size:17px; font-weight:700; margin-bottom:14px;
+  }
+
+  /* FORM */
+  .form { display:flex; flex-direction:column; gap:9px; margin-bottom:13px; }
+  .form input, .form select, .form textarea {
+    border:2px solid var(--border); border-radius:10px;
+    padding:10px 13px; font-family:'DM Sans',sans-serif;
+    font-size:13px; color:var(--brown); background:var(--cream);
+    outline:none; transition:border-color .2s; resize:none;
+  }
+  .form input:focus, .form select:focus, .form textarea:focus { border-color:var(--green); }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+
+  /* WHATSAPP BTN */
+  .wa-btn {
+    width:100%; background:#25D366; color:#fff; border:none;
+    border-radius:13px; padding:14px; font-family:'Playfair Display',serif;
+    font-size:16px; font-weight:700; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    transition:background .2s, transform .1s;
+  }
+  .wa-btn:hover { background:#1DA856; }
+  .wa-btn:active { transform:scale(.98); }
+  .wa-btn:disabled { background:#aaa; cursor:not-allowed; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo-area">
+      <div class="logo-icon">🏪</div>
+      <div class="logo-text">
+        <div class="logo-name">La Taurina</div>
+        <div class="logo-sub">Almacén de barrio</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="horario-badge" id="horarioBadge">
+        <div class="horario-dot"></div>
+        <span id="horarioTxt">—</span>
+      </div>
+      <button class="cart-btn" onclick="openCart()">
+        🛒 <div class="cart-count" id="cartCount">0</div>
+      </button>
+    </div>
+  </div>
+  <div class="horario-strip">
+    Pedidos online: <strong>9:30 hs — 14:00 hs</strong> · Lunes a Sábados
+  </div>
+</header>
+
+<!-- BANNER CERRADO -->
+<div id="cerradoBanner">
+  ⏰ <strong>Estamos cerrados.</strong> El horario de pedidos es de 9:30 a 14:00 hs. ¡Volvé en ese horario!
+</div>
+
+<!-- CATEGORÍAS -->
+<div class="categories">
+  <button class="cat-btn active" onclick="filterCat('all',this)">Todos</button>
+  <button class="cat-btn" onclick="filterCat('lacteos',this)">🥛 Lácteos</button>
+  <button class="cat-btn" onclick="filterCat('fiambres',this)">🥩 Fiambres</button>
+  <button class="cat-btn" onclick="filterCat('verduras',this)">🥬 Verduras</button>
+  <button class="cat-btn" onclick="filterCat('bebidas',this)">🥤 Bebidas</button>
+  <button class="cat-btn" onclick="filterCat('limpieza',this)">🧹 Limpieza</button>
+  <button class="cat-btn" onclick="filterCat('almacen',this)">🫙 Almacén</button>
+</div>
+
+<!-- GRILLA -->
+<div class="grid" id="productGrid"></div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+<!-- CART PANEL -->
+<div class="cart-panel" id="cartPanel">
+  <div class="panel-header">
+    <div class="panel-title">🛒 Tu Pedido</div>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">Tu carrito está vacío</div>
+  </div>
+  <div class="panel-footer">
+    <div class="total-row">
+      <span>Total estimado</span>
+      <span id="cartTotal">$0</span>
+    </div>
+    <div class="form">
+      <div class="form-row">
+        <input type="text" id="fNombre" placeholder="Tu nombre *">
+        <input type="tel"  id="fTel"    placeholder="Tu teléfono *">
+      </div>
+      <input type="text" id="fDir" placeholder="Tu dirección (calle y número) *">
+      <textarea id="fNota" rows="2" placeholder="Aclaraciones (ej: sin TACC, corte especial...)"></textarea>
+      <select id="fPago">
+        <option value="">Forma de pago *</option>
+        <option>Efectivo</option>
+        <option>Transferencia bancaria</option>
+        <option>Tarjeta de débito</option>
+        <option>Tarjeta de crédito</option>
+        <option>Mercado Pago</option>
+      </select>
+    </div>
+    <button class="wa-btn" id="waBtnMain" onclick="sendWhatsApp()">
+      📲 &nbsp;Enviar pedido por WhatsApp
+    </button>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────
+const WA_NUMBER  = "5492235000000"; // ← reemplazar con número real
+const STORE_NAME = "Almacén La Taurina";
+const OPEN_H  = 9, OPEN_M  = 30;
+const CLOSE_H = 14, CLOSE_M = 0;
+
+// ── PRODUCTOS DE EJEMPLO (reemplazar con lista real) ─
+const products = [
+  { id:1,  name:"Leche Entera",          desc:"Sachet 1 litro",   price:850,  cat:"lacteos",  emoji:"🥛" },
+  { id:2,  name:"Queso Cremoso",          desc:"Por 100g",         price:650,  cat:"lacteos",  emoji:"🧀" },
+  { id:3,  name:"Yogur Natural",          desc:"Pote 190g",        price:480,  cat:"lacteos",  emoji:"🥣" },
+  { id:4,  name:"Jamón Cocido",           desc:"Por 100g",         price:780,  cat:"fiambres", emoji:"🥩" },
+  { id:5,  name:"Salame Milán",           desc:"Por 100g",         price:920,  cat:"fiambres", emoji:"🍖" },
+  { id:6,  name:"Tomate",                 desc:"Por kilo",         price:1100, cat:"verduras", emoji:"🍅" },
+  { id:7,  name:"Lechuga",                desc:"Por unidad",       price:650,  cat:"verduras", emoji:"🥬" },
+  { id:8,  name:"Papa",                   desc:"Por kilo",         price:700,  cat:"verduras", emoji:"🥔" },
+  { id:9,  name:"Agua Mineral",           desc:"Botella 2.25L",    price:550,  cat:"bebidas",  emoji:"💧" },
+  { id:10, name:"Gaseosa Cola",           desc:"Botella 2.25L",    price:950,  cat:"bebidas",  emoji:"🥤" },
+  { id:11, name:"Lavandina",              desc:"Botella 1L",       price:420,  cat:"limpieza", emoji:"🧹" },
+  { id:12, name:"Detergente",             desc:"Botella 750ml",    price:680,  cat:"limpieza", emoji:"🫧" },
+  { id:13, name:"Arroz",                  desc:"Bolsa 1kg",        price:890,  cat:"almacen",  emoji:"🍚" },
+  { id:14, name:"Fideos Spaghetti",       desc:"Paquete 500g",     price:620,  cat:"almacen",  emoji:"🍝" },
+  { id:15, name:"Aceite de Girasol",      desc:"Botella 900ml",    price:1450, cat:"almacen",  emoji:"🫙" },
+];
+
+// ── HORARIO ──────────────────────────────────────────
+function isOpen() {
+  const now = new Date();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  const open  = OPEN_H  * 60 + OPEN_M;
+  const close = CLOSE_H * 60 + CLOSE_M;
+  return mins >= open && mins < close;
+}
+function checkHorario() {
+  const badge = document.getElementById('horarioBadge');
+  const txt   = document.getElementById('horarioTxt');
+  const banner= document.getElementById('cerradoBanner');
+  const waBtn = document.getElementById('waBtnMain');
+  if (isOpen()) {
+    badge.className = 'horario-badge abierto';
+    txt.textContent = 'Abierto';
+    banner.style.display = 'none';
+    waBtn.disabled = false;
+  } else {
+    badge.className = 'horario-badge cerrado';
+    txt.textContent = 'Cerrado';
+    banner.style.display = 'block';
+    waBtn.disabled = true;
+    waBtn.textContent = '⏰  Fuera de horario';
+  }
+}
+checkHorario();
+setInterval(checkHorario, 60000);
+
+// ── ESTADO ───────────────────────────────────────────
+const cart = {};
+let activeCat = 'all';
+
+const $ = id => document.getElementById(id);
+const fmt = n => '$' + n.toLocaleString('es-AR');
+
+// ── GRID ─────────────────────────────────────────────
+function renderGrid(cat) {
+  const items = cat === 'all' ? products : products.filter(p => p.cat === cat);
+  $('productGrid').innerHTML = items.map((p, i) => `
+    <div class="card" style="animation-delay:${i*.04}s">
+      <div class="card-img">${p.img
+        ? `<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='${p.emoji}'">`
+        : p.emoji}</div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-price">${fmt(p.price)} <span>/ ${p.desc.startsWith('Por') ? p.desc.toLowerCase() : 'unidad'}</span></div>
+        <div class="qty-row">
+          <button class="qty-btn" onclick="chQty(${p.id},-1)">−</button>
+          <div class="qty-num" id="qty-${p.id}">${cart[p.id]?.qty||0}</div>
+          <button class="qty-btn" onclick="chQty(${p.id},1)">+</button>
+        </div>
+        <div class="qty-sub" id="sub-${p.id}">${cart[p.id]?.qty ? fmt(p.price*cart[p.id].qty) : ''}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function chQty(id, d) {
+  const p = products.find(x => x.id === id);
+  if (!cart[id]) cart[id] = {...p, qty:0};
+  cart[id].qty = Math.max(0, cart[id].qty + d);
+  if (!cart[id].qty) delete cart[id];
+  $('qty-'+id).textContent = cart[id]?.qty || 0;
+  const s = $('sub-'+id);
+  if (s) s.textContent = cart[id]?.qty ? fmt(p.price * cart[id].qty) : '';
+  updateCount();
+}
+
+function filterCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(cat);
+}
+
+function updateCount() {
+  $('cartCount').textContent = Object.values(cart).reduce((s,i)=>s+i.qty,0);
+}
+
+// ── CART PANEL ───────────────────────────────────────
+function openCart() {
+  $('overlay').classList.add('open');
+  $('cartPanel').classList.add('open');
+  renderCartItems();
+}
+function closeCart() {
+  $('overlay').classList.remove('open');
+  $('cartPanel').classList.remove('open');
+}
+function renderCartItems() {
+  const items = Object.values(cart);
+  const container = $('cartItems');
+  if (!items.length) {
+    container.innerHTML = '<div class="cart-empty">Tu carrito está vacío 🛒</div>';
+    $('cartTotal').textContent = '$0';
+    return;
+  }
+  container.innerHTML = items.map(i => `
+    <div class="c-item">
+      <div class="c-emoji">${i.emoji}</div>
+      <div class="c-info">
+        <div class="c-name">${i.name}</div>
+        <div class="c-qty">${i.qty} × ${fmt(i.price)}</div>
+      </div>
+      <div class="c-price">${fmt(i.price*i.qty)}</div>
+      <button class="c-del" onclick="removeItem(${i.id})">✕</button>
+    </div>
+  `).join('');
+  $('cartTotal').textContent = fmt(items.reduce((s,i)=>s+i.price*i.qty,0));
+}
+function removeItem(id) {
+  delete cart[id];
+  updateCount();
+  renderCartItems();
+  renderGrid(activeCat);
+}
+
+// ── WHATSAPP ─────────────────────────────────────────
+function sendWhatsApp() {
+  if (!isOpen()) { alert('El horario de pedidos es de 9:30 a 14:00 hs.'); return; }
+  const items = Object.values(cart);
+  if (!items.length) { alert('Agregá productos al carrito primero 🛒'); return; }
+  const nombre = $('fNombre').value.trim();
+  const tel    = $('fTel').value.trim();
+  const dir    = $('fDir').value.trim();
+  const pago   = $('fPago').value;
+  const nota   = $('fNota').value.trim();
+  if (!nombre) { alert('Por favor ingresá tu nombre.'); $('fNombre').focus(); return; }
+  if (!tel)    { alert('Por favor ingresá tu teléfono.'); $('fTel').focus(); return; }
+  if (!dir)    { alert('Por favor ingresá tu dirección.'); $('fDir').focus(); return; }
+  if (!pago)   { alert('Por favor seleccioná la forma de pago.'); $('fPago').focus(); return; }
+
+  const total = items.reduce((s,i)=>s+i.price*i.qty,0);
+  let msg = `🏪 *Pedido — ${STORE_NAME}*\n\n`;
+  msg += `👤 *Nombre:* ${nombre}\n`;
+  msg += `📞 *Teléfono:* ${tel}\n`;
+  msg += `📍 *Dirección:* ${dir}\n`;
+  msg += `💳 *Pago:* ${pago}\n`;
+  if (nota) msg += `📝 *Nota:* ${nota}\n`;
+  msg += `\n🛒 *Productos:*\n`;
+  items.forEach(i => msg += `• ${i.name} × ${i.qty} = ${fmt(i.price*i.qty)}\n`);
+  msg += `\n💰 *Total estimado: ${fmt(total)}*`;
+
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ── INIT ─────────────────────────────────────────────
+renderGrid('all');
+</script>
+</body>
+</html>
