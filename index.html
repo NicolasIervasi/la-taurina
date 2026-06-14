@@ -6,8 +6,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-[data-theme="light"]{--bg:#F7F4EF;--bg2:#EFEBE3;--card:#FFFFFF;--text:#1A1208;--text2:#4A3728;--border:#DDD5C8;--gray:#9A8E82;--imgbg:#F2EDE5;--hbg:#1A1208;--inp:#F7F4EF;--sh:rgba(26,18,8,.08);--accent:#2D5A3D;--gold:#9A7B2E;--goldl:#C9A84C;}
-[data-theme="dark"]{--bg:#0E0B08;--bg2:#181410;--card:#1C1814;--text:#EDE8E0;--text2:#B8A898;--border:#2A2420;--gray:#6A5E52;--imgbg:#201C18;--hbg:#080604;--inp:#181410;--sh:rgba(0,0,0,.4);--accent:#4A8A5E;--gold:#C9A84C;--goldl:#E8C87A;}
+[data-theme="light"]{--bg:#F7F4EF;--bg2:#EEEAD F;--card:#FFFFFF;--text:#1A1208;--text2:#4A3728;--border:#D8D0C4;--gray:#8A7E72;--imgbg:#F0EBE2;--hbg:#181008;--inp:#F7F4EF;--sh:rgba(26,18,8,.1);--accent:#2D5A3D;--gold:#9A7B2E;--goldl:#C9A84C;}
+[data-theme="dark"]{--bg:#0D0D0D;--bg2:#171717;--card:#202020;--text:#F0EBE3;--text2:#C8B89A;--border:#303030;--gray:#888070;--imgbg:#2A2A2A;--hbg:#080808;--inp:#1A1A1A;--sh:rgba(0,0,0,.5);--accent:#5AAD78;--gold:#D4A843;--goldl:#F0C860;}
 :root{--amber:#C97B0A;--amberl:#E8961E;--green:#2E6B3E;--red:#B83232;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
@@ -122,10 +122,21 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .card:hover .card-zoom-hint{opacity:1;}
 
 /* BADGES */
-.badge{position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:2px;letter-spacing:.8px;text-transform:uppercase;}
+.badge{position:absolute;top:9px;left:9px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:50px;letter-spacing:.6px;text-transform:uppercase;display:flex;align-items:center;gap:4px;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.6);flex-shrink:0;}
 .badge-oferta{background:#c0392b;color:#fff;}
-.badge-destacado{background:var(--gold);color:#fff;}
-.badge-nuevo{background:var(--accent);color:#fff;}
+.badge-destacado{background:#8B6914;color:#FFE08A;}
+.badge-nuevo{background:#1a5c34;color:#7EFAB0;}
+/* badge en lista admin */
+.pli-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:50px;letter-spacing:.5px;text-transform:uppercase;}
+.pli-badge.badge-oferta{background:rgba(192,57,43,.15);color:#e74c3c;border:1px solid rgba(192,57,43,.25);}
+.pli-badge.badge-destacado{background:rgba(139,105,20,.15);color:#d4a843;border:1px solid rgba(139,105,20,.25);}
+.pli-badge.badge-nuevo{background:rgba(26,92,52,.15);color:#5aad78;border:1px solid rgba(26,92,52,.25);}
+/* leyenda de badges arriba del grid */
+.badge-legend{display:flex;gap:8px;flex-wrap:wrap;padding:10px 20px 0;}
+.bl-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gray);}
+.bl-dot{width:8px;height:8px;border-radius:50%;}
+.bl-dot.oferta{background:#c0392b;} .bl-dot.destacado{background:#D4A843;} .bl-dot.nuevo{background:#5aad78;}
 
 .card-body{padding:12px 12px 10px;}
 .card-cat{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;}
@@ -386,6 +397,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
   </div>
   <div class="cat-wrap"><div class="cats" id="cats"></div></div>
   <div class="grid-section">
+    <div class="badge-legend" id="badgeLegend"></div>
     <div class="grid-header">
       <div class="grid-title" id="gridTitle">Todos los productos</div>
       <div class="grid-count" id="gridCount"></div>
@@ -694,6 +706,13 @@ function renderGrid(cat){
   const titles={all:'Todos los productos',lacteos:'Lácteos',fiambres:'Fiambres',verduras:'Verduras',bebidas:'Bebidas',limpieza:'Limpieza',almacen:'Almacén'};
   $('gridTitle').textContent=searchQ?`Resultados para "${searchQ}"`:titles[cat]||'Productos';
   $('gridCount').textContent=items.length+' producto'+(items.length!==1?'s':'');
+  // Badge legend
+  const hasOfertas=items.some(p=>p.badge==='oferta');
+  const hasDestacados=items.some(p=>p.badge==='destacado');
+  const hasNuevos=items.some(p=>p.badge==='nuevo');
+  const leg=$('badgeLegend');
+  if(leg)leg.innerHTML=(hasOfertas||hasDestacados||hasNuevos)?
+    `${hasOfertas?'<div class="bl-item"><div class="bl-dot oferta"></div>Oferta</div>':''}${hasDestacados?'<div class="bl-item"><div class="bl-dot destacado"></div>Destacado</div>':''}${hasNuevos?'<div class="bl-item"><div class="bl-dot nuevo"></div>Nuevo</div>':''}`:'';
   if(!items.length){
     $('grid').innerHTML=`<div class="no-results" style="grid-column:1/-1"><span class="no-results-icon">🔍</span>No encontramos "${searchQ}".<br><span style="font-size:12px">Probá con otro término.</span></div>`;
     return;
