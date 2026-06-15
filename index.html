@@ -933,12 +933,18 @@ async function sendOrder(){
   const{error}=await sb.from('orders').insert({id:oid,user_id:cu.id,user_name:cu.nombre,user_tel:cu.tel,address:dir,payment:pago,note:nota,items:items.map(i=>({name:i.name,qty:i.qty,price:i.price,e:i.e||'🛍️'})),total,status:'Pendiente'});
   load(false);
   if(error){alert('Error al guardar el pedido.');return;}
-  let msg=`🏪 *Pedido ${oid} — La Taurina*\n\n`;
-  msg+=`👤 *Cliente:* ${cu.nombre}\n📞 *Tel:* ${cu.tel}\n📍 *Dirección:* ${dir}\n💳 *Pago:* ${pago}\n`;
-  if(nota)msg+=`📝 *Nota:* ${nota}\n`;
-  msg+=`\n🛒 *Productos:*\n`;
-  items.forEach(i=>msg+=`• ${i.name} × ${i.qty} — ${fm(i.price*i.qty)}\n`);
-  msg+=`\n💰 *Total: ${fm(total)}*`;
+  let msg=`PEDIDO ${oid} — LA TAURINA\n`;
+  msg+=`━━━━━━━━━━━━━━━━━━━━\n`;
+  msg+=`Cliente: ${cu.nombre}\n`;
+  msg+=`Tel: ${cu.tel}\n`;
+  msg+=`Direccion: ${dir}\n`;
+  msg+=`Pago: ${pago}\n`;
+  if(nota)msg+=`Nota: ${nota}\n`;
+  msg+=`━━━━━━━━━━━━━━━━━━━━\n`;
+  msg+=`PRODUCTOS\n`;
+  items.forEach(i=>msg+=`${i.name} x${i.qty}  ${fm(i.price*i.qty)}\n`);
+  msg+=`━━━━━━━━━━━━━━━━━━━━\n`;
+  msg+=`TOTAL: ${fm(total)}`;
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
   cart={};updFab();closeCart();renderGrid(aCat);
   toast('✓ Pedido enviado correctamente');
