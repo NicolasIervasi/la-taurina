@@ -6,13 +6,75 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-[data-theme="light"]{--bg:#F7F4EF;--bg2:#EEEAD F;--card:#FFFFFF;--text:#1A1208;--text2:#4A3728;--border:#D8D0C4;--gray:#8A7E72;--imgbg:#F0EBE2;--hbg:#181008;--inp:#F7F4EF;--sh:rgba(26,18,8,.1);--accent:#2D5A3D;--gold:#9A7B2E;--goldl:#C9A84C;}
-[data-theme="dark"]{--bg:#0D0D0D;--bg2:#171717;--card:#202020;--text:#F0EBE3;--text2:#C8B89A;--border:#303030;--gray:#888070;--imgbg:#2A2A2A;--hbg:#080808;--inp:#1A1A1A;--sh:rgba(0,0,0,.5);--accent:#5AAD78;--gold:#D4A843;--goldl:#F0C860;}
+[data-theme="light"]{
+  --bg:#F7F4EF;--bg2:#EDEAE3;--card:#FFFFFF;--text:#1A1208;--text2:#4A3728;
+  --border:#D8CFC4;--gray:#8A7E72;--imgbg:#F0EBE2;--hbg:#181008;--inp:#F7F4EF;
+  --sh:rgba(26,18,8,.1);--accent:#2D5A3D;--gold:#9A7B2E;--goldl:#C9A84C;
+  --card-sh:0 2px 12px rgba(26,18,8,.07),0 0 0 1px rgba(26,18,8,.04);
+}
+[data-theme="dark"]{
+  --bg:#111111;--bg2:#191919;--card:#222222;--text:#F2EDE5;--text2:#C8B89A;
+  --border:#363636;--gray:#7A7060;--imgbg:#2C2C2C;--hbg:#0A0A0A;--inp:#1C1C1C;
+  --sh:rgba(0,0,0,.6);--accent:#5CAF7A;--gold:#D4A843;--goldl:#F0C455;
+  --card-sh:0 2px 12px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
+}
 :root{--amber:#C97B0A;--amberl:#E8961E;--green:#2E6B3E;--red:#B83232;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
 
-/* LOADING */
+/* DARK MODE OVERRIDES */
+[data-theme="dark"] header{border-bottom-color:#1F1F1F;}
+[data-theme="dark"] .h-announce{background:#8B6914;color:#FFF8E0;}
+[data-theme="dark"] .cat-wrap{background:#141414;border-bottom-color:#2A2A2A;}
+[data-theme="dark"] .search-wrap{background:#141414;border-bottom-color:#2A2A2A;}
+[data-theme="dark"] .search-input{background:#1C1C1C;border-color:#363636;color:#F2EDE5;}
+[data-theme="dark"] .search-input::placeholder{color:#5A5040;}
+[data-theme="dark"] .card{box-shadow:var(--card-sh);}
+[data-theme="dark"] .card:hover{border-color:var(--goldl);box-shadow:0 0 0 1px var(--gold),0 8px 32px rgba(0,0,0,.5);}
+[data-theme="dark"] .hero{background:linear-gradient(180deg,#0A0A0A 0%,#111111 100%);}
+[data-theme="dark"] .hero::before{background:radial-gradient(ellipse at 50% 0%,rgba(92,175,122,.18),transparent 65%);}
+[data-theme="dark"] .hero-title{color:#F5F0E8;}
+[data-theme="dark"] .hero-sub{color:rgba(242,237,229,.45);}
+[data-theme="dark"] .trust-item{color:rgba(242,237,229,.45);}
+[data-theme="dark"] .qty-btn{background:#2A2A2A;}
+[data-theme="dark"] .qty-num{background:#222;}
+[data-theme="dark"] .cart-fab{background:#1E1E1E;border-color:var(--gold);box-shadow:0 4px 24px rgba(0,0,0,.7),0 0 0 1px rgba(212,168,67,.2);}
+[data-theme="dark"] .fab-items{color:rgba(242,237,229,.5);}
+[data-theme="dark"] .fab-amt{color:var(--goldl);}
+[data-theme="dark"] .side-panel{background:#1C1C1C;border-color:#2E2E2E;}
+[data-theme="dark"] .ocard{background:#1C1C1C;}
+[data-theme="dark"] .ocard-head:hover{background:#262626;}
+[data-theme="dark"] .pago-opt{background:#1C1C1C;border-color:#363636;color:#A09080;}
+[data-theme="dark"] .pago-opt.sel{background:#222;border-color:var(--gold);color:var(--goldl);}
+[data-theme="dark"] .auth-card{background:#1A1A1A;border:1px solid #2E2E2E;}
+[data-theme="dark"] .field input{background:#141414;border-color:#363636;}
+[data-theme="dark"] .modal{background:#1A1A1A;border-color:#303030;}
+[data-theme="dark"] .mfield input,.mfield select{background:#141414;border-color:#363636;}
+[data-theme="dark"] .cform input,.cform select,.cform textarea{background:#141414;border-color:#363636;}
+
+/* OUT OF STOCK */
+.card.no-stock{opacity:.6;}
+.card.no-stock .card-img{filter:grayscale(.7);}
+.card.no-stock .qty-ctrl{display:none;}
+.no-stock-tag{font-size:10px;font-weight:700;color:#c0392b;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;display:flex;align-items:center;gap:4px;}
+.no-stock-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:#c0392b;display:inline-block;}
+.badge-agotado{background:#333;color:#aaa;}
+[data-theme="dark"] .card.no-stock .card-img{filter:grayscale(.8) brightness(.6);}
+
+/* STOCK TOGGLE */
+.stock-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;}
+.toggle-track{width:34px;height:18px;border-radius:50px;background:var(--border);position:relative;transition:background .2s;border:1px solid rgba(0,0,0,.08);}
+.toggle-track.on{background:var(--accent);}
+.toggle-knob{width:12px;height:12px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.toggle-track.on .toggle-knob{left:18px;}
+.toggle-label{font-size:11px;font-weight:600;color:var(--gray);letter-spacing:.3px;width:42px;}
+.toggle-label.on{color:var(--accent);}
+
+/* NOTIF BADGE */
+.notif-dot{background:#c0392b;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;position:absolute;top:-4px;right:-4px;}
+.nbtn{position:relative;}
+.h-nav-notif{position:relative;display:inline-flex;}
+.h-notif-dot{background:#c0392b;color:#fff;border-radius:50%;width:14px;height:14px;font-size:8px;font-weight:700;display:none;align-items:center;justify-content:center;position:absolute;top:-5px;right:-5px;}
 .loading{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;align-items:center;justify-content:center;}
 .loading.show{display:flex;}
 .spinner{width:36px;height:36px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--goldl);border-radius:50%;animation:spin .7s linear infinite;}
@@ -84,9 +146,18 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .cats{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
 .cats::-webkit-scrollbar{display:none;}
 .cat-btn{background:none;border:none;border-bottom:2px solid transparent;padding:12px 16px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:var(--gray);cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.3px;display:flex;align-items:center;gap:5px;}
-.cat-btn .ccount{font-size:10px;background:var(--border);border-radius:50px;padding:1px 6px;color:var(--gray);}
+.cat-btn .ccount{font-size:10px;background:var(--border);border-radius:50px;padding:1px 6px;color:var(--gray);transition:all .2s;}
 .cat-btn.active .ccount{background:var(--gold);color:#fff;}
 .cat-btn.active,.cat-btn:hover{color:var(--text);border-bottom-color:var(--gold);}
+.cat-sep{width:1px;background:var(--border);margin:10px 4px;flex-shrink:0;}
+.cat-btn.badge-filter{font-size:11px;}
+.cat-btn.badge-filter.active-oferta{color:#e74c3c;border-bottom-color:#e74c3c;}
+.cat-btn.badge-filter.active-destacado{color:var(--goldl);border-bottom-color:var(--goldl);}
+.cat-btn.badge-filter.active-nuevo{color:#5aad78;border-bottom-color:#5aad78;}
+.cat-btn.badge-filter .ccount{font-size:10px;}
+.cat-btn.badge-filter.active-oferta .ccount{background:#c0392b;color:#fff;}
+.cat-btn.badge-filter.active-destacado .ccount{background:var(--gold);color:#fff;}
+.cat-btn.badge-filter.active-nuevo .ccount{background:#2D5A3D;color:#fff;}
 
 /* HERO */
 .hero{background:var(--hbg);padding:44px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05);position:relative;overflow:hidden;}
@@ -362,8 +433,13 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
       <div><div class="logo-name">La Taurina</div><div class="logo-sub">Almacén de barrio</div></div>
     </div>
     <div class="h-center">
-      <button class="h-nav-btn active" id="nTD" onclick="showSec('tienda')">Tienda</button>
-      <button class="h-nav-btn" id="nPD" onclick="showSec('pedidos')">Mis Pedidos</button>
+      <div class="h-nav-notif">
+        <button class="h-nav-btn active" id="nTD" onclick="showSec('tienda')">Tienda</button>
+      </div>
+      <div class="h-nav-notif">
+        <button class="h-nav-btn" id="nPD" onclick="showSec('pedidos')">Mis Pedidos</button>
+        <div class="h-notif-dot" id="hNotifD"></div>
+      </div>
     </div>
     <div class="h-right">
       <div class="h-badge" id="hB"><div class="hdot"></div><span id="hT">—</span></div>
@@ -461,6 +537,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
   </button>
   <button class="nbtn" id="nPM" onclick="showSec('pedidos')">
     <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Pedidos
+    <div class="notif-dot" id="mNotifD"></div>
   </button>
 </div>
 
@@ -561,7 +638,7 @@ const CATS={lacteos:'Lácteos',fiambres:'Fiambres',verduras:'Verduras',bebidas:'
 const PAGOS=['Efectivo','Transferencia','Tarjeta débito','Tarjeta crédito','Mercado Pago'];
 const BADGES={oferta:{label:'Oferta',cls:'badge-oferta'},destacado:{label:'Destacado',cls:'badge-destacado'},nuevo:{label:'Nuevo',cls:'badge-nuevo'}};
 
-let cu=null,cart={},aCat='all',editId=null,PRODS=[],searchQ='',pmProdId=null;
+let cu=null,cart={},aCat='all',editId=null,PRODS=[],searchQ='',pmProdId=null,unreadNotifs=0,realtimeCh=null;
 const $=id=>document.getElementById(id);
 const fm=n=>'$'+Math.round(n).toLocaleString('es-AR');
 
@@ -669,7 +746,7 @@ function showSec(s){
   $('sP').style.display=s==='pedidos'?'block':'none';
   [$('nTD'),$('nTM')].forEach(b=>{if(b)b.classList.toggle('active',s==='tienda');});
   [$('nPD'),$('nPM')].forEach(b=>{if(b)b.classList.toggle('active',s==='pedidos');});
-  if(s==='pedidos')renderMyOrders();
+  if(s==='pedidos'){renderMyOrders();clearNotifs();}
 }
 function aTab(t){
   $('secPed').style.display=t==='ped'?'block':'none';
@@ -682,23 +759,45 @@ function aTab(t){
 // Products
 async function loadProducts(){
   const{data}=await sb.from('products').select('*').order('id');
-  PRODS=(data||[]).map(p=>({id:p.id,name:p.name,desc:p.description,price:p.price,cat:p.category,e:p.emoji,img:p.img_url,badge:p.badge||''}));
+  PRODS=(data||[]).map(p=>({id:p.id,name:p.name,desc:p.description,price:p.price,cat:p.category,e:p.emoji,img:p.img_url,badge:p.badge||'',inStock:p.in_stock!==false}));
 }
 async function loadAndRenderGrid(cat){
   if(!PRODS.length){load(true);await loadProducts();load(false);}
   renderCats();renderGrid(cat);
 }
 function getFiltered(cat){
-  let items=cat==='all'?PRODS:PRODS.filter(p=>p.cat===cat);
+  let items;
+  if(cat.startsWith('badge_')){
+    const b=cat.replace('badge_','');
+    items=PRODS.filter(p=>p.badge===b);
+  } else {
+    items=cat==='all'?PRODS:PRODS.filter(p=>p.cat===cat);
+  }
   if(searchQ)items=items.filter(p=>p.name.toLowerCase().includes(searchQ)||p.desc.toLowerCase().includes(searchQ)||(CATS[p.cat]||'').toLowerCase().includes(searchQ));
   return items;
 }
 function renderCats(){
   const catList=[{k:'all',l:'Todo'},...Object.entries(CATS).map(([k,l])=>({k,l}))];
-  $('cats').innerHTML=catList.map(c=>{
+  let html=catList.map(c=>{
     const count=c.k==='all'?PRODS.length:PRODS.filter(p=>p.cat===c.k).length;
     return `<button class="cat-btn${aCat===c.k?' active':''}" onclick="fCat('${c.k}',this)">${c.l} <span class="ccount">${count}</span></button>`;
   }).join('');
+  // Badge filters
+  const bFilters=[
+    {k:'oferta',l:'Ofertas',cls:'active-oferta'},
+    {k:'destacado',l:'Destacados',cls:'active-destacado'},
+    {k:'nuevo',l:'Nuevos',cls:'active-nuevo'},
+  ];
+  const badgeBtns=bFilters.filter(b=>PRODS.some(p=>p.badge===b.k));
+  if(badgeBtns.length){
+    html+=`<div class="cat-sep"></div>`;
+    html+=badgeBtns.map(b=>{
+      const count=PRODS.filter(p=>p.badge===b.k).length;
+      const isActive=aCat==='badge_'+b.k;
+      return `<button class="cat-btn badge-filter${isActive?' '+b.cls:''}" onclick="fCat('badge_${b.k}',this)">${b.l} <span class="ccount">${count}</span></button>`;
+    }).join('');
+  }
+  $('cats').innerHTML=html;
 }
 function renderGrid(cat){
   aCat=cat;
@@ -717,28 +816,34 @@ function renderGrid(cat){
     $('grid').innerHTML=`<div class="no-results" style="grid-column:1/-1"><span class="no-results-icon">🔍</span>No encontramos "${searchQ}".<br><span style="font-size:12px">Probá con otro término.</span></div>`;
     return;
   }
-  $('grid').innerHTML=items.map((p,i)=>`
-    <div class="card" style="animation-delay:${i*.05}s">
-      <div class="card-img-wrap" onclick="openProdModal(${p.id})">
+  $('grid').innerHTML=items.map((p,i)=>{
+    const noStock=!p.inStock;
+    const badgeHtml=noStock
+      ?`<div class="badge badge-agotado">Agotado</div>`
+      :p.badge&&BADGES[p.badge]?`<div class="badge ${BADGES[p.badge].cls}">${BADGES[p.badge].label}</div>`:'';
+    return `
+    <div class="card${noStock?' no-stock':''}" style="animation-delay:${i*.05}s">
+      <div class="card-img-wrap"${!noStock?` onclick="openProdModal(${p.id})"`:''}>
         <div class="card-img">${p.img?`<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='<span class=card-img-placeholder>${p.e||'🛍️'}</span>'">`:`<span class="card-img-placeholder">${p.e||'🛍️'}</span>`}</div>
-        ${p.badge&&BADGES[p.badge]?`<div class="badge ${BADGES[p.badge].cls}">${BADGES[p.badge].label}</div>`:''}
-        <div class="card-zoom-hint">Ver detalle</div>
+        ${badgeHtml}
+        ${!noStock?'<div class="card-zoom-hint">Ver detalle</div>':''}
       </div>
       <div class="card-body">
         <div class="card-cat">${CATS[p.cat]||p.cat}</div>
-        <div class="card-name" onclick="openProdModal(${p.id})">${p.name}</div>
+        <div class="card-name"${!noStock?` onclick="openProdModal(${p.id})"`:''}>${p.name}</div>
         <div class="card-desc">${p.desc}</div>
         <div class="card-footer">
           <div class="card-price">${fm(p.price)}</div>
-          <div class="qty-ctrl${cart[p.id]?.qty?' qty-has':''}">
+          ${!noStock?`<div class="qty-ctrl${cart[p.id]?.qty?' qty-has':''}">
             <button class="qty-btn" onclick="chQ(${p.id},-1)">−</button>
             <div class="qty-num" id="q${p.id}">${cart[p.id]?.qty||0}</div>
             <button class="qty-btn" onclick="chQ(${p.id},1)">+</button>
-          </div>
+          </div>`:'<div class="no-stock-tag">Sin stock</div>'}
         </div>
         <div class="qty-sub" id="s${p.id}">${cart[p.id]?.qty?fm(p.price*cart[p.id].qty):''}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 function fCat(cat,btn){document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');searchQ='';$('searchInput').value='';$('searchClear').classList.remove('show');renderGrid(cat);}
 function onSearch(v){
@@ -899,16 +1004,30 @@ async function renderAdmin(){
 }
 async function updSt(id,v){await sb.from('orders').update({status:v}).eq('id',id);renderAdmin();}
 
+async function toggleStock(id,val){
+  load(true);
+  await sb.from('products').update({in_stock:val}).eq('id',id);
+  PRODS=[];await loadProducts();load(false);
+  renderProdList();
+  toast(val?'✓ Producto activado en tienda':'⚠ Producto marcado sin stock');
+}
+
 async function renderProdList(){
   if(!PRODS.length){load(true);await loadProducts();load(false);}
   $('prodList').innerHTML=PRODS.map(p=>`
     <div class="pli">
-      <div class="pli-thumb">${p.img?`<img src="${p.img}" onerror="this.parentElement.innerHTML='${p.e||'🛍️'}'">`:p.e||'🛍️'}</div>
+      <div class="pli-thumb" style="${!p.inStock?'filter:grayscale(.7);opacity:.5':''}">
+        ${p.img?`<img src="${p.img}" onerror="this.parentElement.innerHTML='${p.e||'🛍️'}'">`:p.e||'🛍️'}
+      </div>
       <div class="pli-info">
         <div class="pli-name">${p.name}</div>
         <div class="pli-meta">${CATS[p.cat]||p.cat}${p.badge&&BADGES[p.badge]?` &nbsp;<span class="pli-badge ${BADGES[p.badge].cls}">${BADGES[p.badge].label}</span>`:''}</div>
       </div>
       <span class="pli-price">${fm(p.price)}</span>
+      <div class="stock-toggle" onclick="toggleStock(${p.id},${!p.inStock})" title="${p.inStock?'Marcar sin stock':'Activar producto'}">
+        <div class="toggle-track${p.inStock?' on':''}"><div class="toggle-knob"></div></div>
+        <span class="toggle-label${p.inStock?' on':''}">${p.inStock?'Stock':'Sin stock'}</span>
+      </div>
       <div class="pli-acts">
         <button class="iact" onclick="openModal(${p.id})">✏</button>
         <button class="iact del" onclick="delProd(${p.id})">✕</button>
