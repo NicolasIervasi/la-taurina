@@ -385,9 +385,37 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .nbtn{flex:1;max-width:120px;background:none;border:none;color:rgba(255,255,255,.3);padding:9px 0 11px;font-family:'Inter',sans-serif;font-size:10px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .2s;letter-spacing:.5px;text-transform:uppercase;}
 .nbtn svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.5;fill:none;}
 .nbtn.active{color:var(--goldl);}
+.logo-ring{border:none!important;width:44px!important;height:44px!important;overflow:hidden;background:none!important;}
+.auth-emblem{border:none!important;background:none!important;width:110px!important;height:110px!important;overflow:hidden;}
+.logo-img{width:100%;height:100%;object-fit:contain;}
+[data-theme="light"] .logo-img{filter:none;}
+[data-theme="dark"] .logo-img{filter:brightness(0) saturate(100%) invert(72%) sepia(45%) saturate(400%) hue-rotate(5deg) brightness(95%);}
 </style>
 </head>
 <body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="lt-logo" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.5"/>
+  <ellipse cx="54" cy="53" rx="20" ry="13" fill="currentColor"/>
+  <ellipse cx="31" cy="46" rx="11" ry="9" fill="currentColor"/>
+  <path d="M38,39 Q48,37 52,47 Q46,57 38,57 Q33,52 32,46Z" fill="currentColor"/>
+  <path d="M23,41 Q15,31 20,27 Q26,32 27,41" fill="currentColor"/>
+  <path d="M32,37 Q31,28 37,26 Q38,34 34,38" fill="currentColor"/>
+  <rect x="38" y="64" width="5" height="11" rx="2" fill="currentColor"/>
+  <rect x="47" y="65" width="5" height="10" rx="2" fill="currentColor"/>
+  <rect x="59" y="64" width="5" height="11" rx="2" fill="currentColor"/>
+  <rect x="67" y="62" width="5" height="10" rx="2" fill="currentColor"/>
+  <path d="M74,50 Q85,41 80,34" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+  <text font-family="Georgia,serif" font-size="9.5" font-weight="bold" fill="currentColor" letter-spacing="2.2">
+    <textPath path="M 14,50 A 36,36 0 0,1 86,50" startOffset="9%">LA TAURINA</textPath>
+  </text>
+  <text font-family="Georgia,serif" font-size="4.8" fill="currentColor" letter-spacing="0.3">
+    <textPath path="M 17,56 A 35,35 0 0,0 83,56" startOffset="2%">JAMONERÍA · COMESTIBLES</textPath>
+  </text>
+  <text x="50" y="91" text-anchor="middle" font-family="Georgia,serif" font-size="5" fill="currentColor" letter-spacing="1.5">EST. 1969</text>
+</symbol>
+</svg>
 
 <div class="loading" id="loading"><div class="spinner"></div></div>
 <div class="toast" id="toast"></div>
@@ -396,9 +424,9 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 <div id="vAuth">
 <div class="auth-wrap"><div class="auth-card">
   <div class="auth-logo">
-    <div class="auth-emblem"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+    <div class="auth-emblem"><img src="logo.png" alt="La Taurina" class="logo-img"></div>
     <span class="auth-name">La Taurina</span>
-    <span class="auth-sub">Almacén de Barrio</span>
+    <span class="auth-sub">Jamonería · Comestibles · Est. 1969</span>
   </div>
   <div class="auth-divider"></div>
   <div class="tab-row">
@@ -429,8 +457,8 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
   <div class="h-announce">Pedidos disponibles de 9:30 a 14:00 hs · Lunes a Sábados</div>
   <div class="h-main">
     <div class="logo-group">
-      <div class="logo-ring"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-      <div><div class="logo-name">La Taurina</div><div class="logo-sub">Almacén de barrio</div></div>
+      <div class="logo-ring"><img src="logo.png" alt="La Taurina" class="logo-img"></div>
+      <div><div class="logo-name">La Taurina</div><div class="logo-sub">Jamonería · Comestibles</div></div>
     </div>
     <div class="h-center">
       <div class="h-nav-notif">
@@ -496,7 +524,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 <header>
   <div class="h-main">
     <div class="logo-group">
-      <div class="logo-ring"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="logo-ring"><img src="logo.png" alt="La Taurina" class="logo-img"></div>
       <div><div class="logo-name">La Taurina</div><div class="logo-sub">Administración</div></div>
     </div>
     <div class="h-right">
