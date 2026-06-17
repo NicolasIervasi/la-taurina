@@ -388,6 +388,29 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .logo-ring{border:none!important;width:44px!important;height:44px!important;overflow:visible!important;background:none!important;}
 .auth-emblem{border:none!important;background:none!important;width:150px!important;height:150px!important;overflow:visible!important;}
 .logo-img{width:100%;height:100%;object-fit:contain;}
+
+/* TICKET PRINT */
+.iact.print:hover{border-color:var(--accent);color:var(--accent);}
+#ticketArea{display:none;}
+@media print{
+  body *{visibility:hidden;}
+  #ticketArea,#ticketArea *{visibility:visible;}
+  #ticketArea{display:block!important;position:absolute;top:0;left:0;width:280px;padding:10px;}
+  @page{margin:0;size:80mm auto;}
+}
+.tk-wrap{font-family:'Courier New',monospace;color:#000;width:280px;font-size:12px;line-height:1.5;}
+.tk-center{text-align:center;}
+.tk-logo{width:70px;height:70px;object-fit:contain;margin:0 auto 4px;display:block;}
+.tk-name{font-weight:700;font-size:16px;letter-spacing:1px;}
+.tk-sub{font-size:10px;letter-spacing:1px;}
+.tk-line{border-top:1px dashed #000;margin:8px 0;}
+.tk-row{display:flex;justify-content:space-between;gap:8px;}
+.tk-row span:first-child{flex:1;}
+.tk-bold{font-weight:700;}
+.tk-big{font-size:15px;font-weight:700;}
+.tk-item{display:flex;justify-content:space-between;margin-bottom:3px;}
+.tk-item-name{flex:1;padding-right:6px;}
+.tk-foot{text-align:center;font-size:10px;margin-top:10px;}
 </style>
 </head>
 <body>
@@ -414,6 +437,8 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
   <text x="50" y="91" text-anchor="middle" font-family="Georgia,serif" font-size="5" fill="currentColor" letter-spacing="1.5">EST. 1969</text>
 </symbol>
 </svg>
+
+<div id="ticketArea"></div>
 
 <div class="loading" id="loading"><div class="spinner"></div></div>
 <div class="toast" id="toast"></div>
@@ -1019,9 +1044,14 @@ async function renderAdmin(){
   $('aOrders').innerHTML=!o.length?'<div class="noord">No hay pedidos todavía.</div>'
     :o.map(x=>`
       <div class="aocard">
-        <div class="aoid">${x.id} &nbsp;<span class="ostatus s${x.status.replace(/\s/g,'')}">${x.status}</span></div>
-        <div class="aoc">👤 ${x.user_name} &nbsp;·&nbsp; 📞 ${x.user_tel||'—'} &nbsp;·&nbsp; 📍 ${x.address}</div>
-        <div class="aoc">${fd(x.created_at)}</div>
+        <div class="aoh" style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="aoid">${x.id} &nbsp;<span class="ostatus s${x.status.replace(/\s/g,'')}">${x.status}</span></div>
+            <div class="aoc">👤 ${x.user_name} &nbsp;·&nbsp; 📞 ${x.user_tel||'—'} &nbsp;·&nbsp; 📍 ${x.address}</div>
+            <div class="aoc">${fd(x.created_at)}</div>
+          </div>
+          <button class="iact print" onclick='printTicket(${JSON.stringify(x).replace(/'/g,"&#39;")})' title="Imprimir ticket">🖨</button>
+        </div>
         <div class="aoi">${x.items.map(i=>`${i.e} ${i.name} × ${i.qty} — ${fm(i.price*i.qty)}`).join('<br>')}</div>
         <div class="aof">
           <span class="aoinfo">💳 ${x.payment}${x.note?' &nbsp;·&nbsp; 📝 '+x.note:''}</span>
@@ -1033,6 +1063,42 @@ async function renderAdmin(){
           </div>
         </div>
       </div>`).join('');
+}
+
+function printTicket(o){
+  const fecha=new Date(o.created_at);
+  const fechaStr=fecha.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const horaStr=fecha.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+  const itemsHtml=o.items.map(i=>`
+    <div class="tk-item">
+      <span class="tk-item-name">${i.name} x${i.qty}</span>
+      <span>${fm(i.price*i.qty)}</span>
+    </div>`).join('');
+  $('ticketArea').innerHTML=`
+    <div class="tk-wrap">
+      <div class="tk-center">
+        <img src="logo.png" class="tk-logo">
+        <div class="tk-name">LA TAURINA</div>
+        <div class="tk-sub">JAMONERIA · COMESTIBLES</div>
+      </div>
+      <div class="tk-line"></div>
+      <div class="tk-row"><span>Pedido:</span><span class="tk-bold">${o.id}</span></div>
+      <div class="tk-row"><span>Fecha:</span><span>${fechaStr} ${horaStr}</span></div>
+      <div class="tk-line"></div>
+      <div class="tk-row"><span>Cliente:</span><span class="tk-bold">${o.user_name}</span></div>
+      <div class="tk-row"><span>Tel:</span><span>${o.user_tel||'-'}</span></div>
+      <div class="tk-row"><span>Direccion:</span><span></span></div>
+      <div style="margin:2px 0 6px">${o.address}</div>
+      <div class="tk-row"><span>Pago:</span><span class="tk-bold">${o.payment}</span></div>
+      ${o.note?`<div class="tk-row"><span>Nota:</span><span></span></div><div style="margin:2px 0 6px">${o.note}</div>`:''}
+      <div class="tk-line"></div>
+      ${itemsHtml}
+      <div class="tk-line"></div>
+      <div class="tk-row tk-big"><span>TOTAL</span><span>${fm(o.total)}</span></div>
+      <div class="tk-line"></div>
+      <div class="tk-foot">Gracias por su compra<br>www.lataurina.com.ar</div>
+    </div>`;
+  setTimeout(()=>{window.print();},100);
 }
 async function updSt(id,v){await sb.from('orders').update({status:v}).eq('id',id);renderAdmin();}
 
