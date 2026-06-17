@@ -264,6 +264,26 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .cform input:focus,.cform select:focus,.cform textarea:focus{border-color:var(--gold);}
 .ferr{font-size:10px;color:#c0392b;margin-top:-3px;}
 .pago-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:5px;display:block;}
+
+/* CALENDAR */
+.date-field-wrap{position:relative;}
+.date-display{width:100%;border:1px solid var(--border);border-radius:2px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);background:var(--inp);outline:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;transition:border-color .2s;}
+.date-display:hover{border-color:var(--gold);}
+.date-display svg{width:15px;height:15px;stroke:var(--gold);stroke-width:1.5;fill:none;flex-shrink:0;}
+.cal-popup{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:4px;box-shadow:0 16px 40px rgba(0,0,0,.25);z-index:60;padding:13px;}
+.cal-popup.open{display:block;}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.cal-header button{background:var(--bg2);border:1px solid var(--border);width:25px;height:25px;border-radius:2px;cursor:pointer;color:var(--text);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.cal-header button:hover{border-color:var(--gold);color:var(--gold);}
+.cal-month-label{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:14px;text-transform:capitalize;letter-spacing:.3px;}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:10px;color:var(--gray);margin-bottom:5px;letter-spacing:.3px;font-weight:600;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-day{background:none;border:none;border-radius:2px;padding:7px 0;font-size:12px;color:var(--text);cursor:pointer;transition:all .15s;}
+.cal-day:hover:not(.disabled){background:var(--bg2);}
+.cal-day.disabled{color:var(--border);cursor:not-allowed;}
+.cal-day.selected{background:var(--accent);color:#fff;font-weight:600;}
+.cal-day.today:not(.selected){box-shadow:inset 0 0 0 1px var(--gold);}
+.cal-day.empty{visibility:hidden;cursor:default;}
 .pago-icons{display:flex;gap:7px;margin-bottom:8px;flex-wrap:wrap;}
 .pago-opt{border:1px solid var(--border);border-radius:2px;padding:6px 10px;font-size:11px;cursor:pointer;color:var(--gray);transition:all .2s;background:var(--bg2);font-family:'Inter',sans-serif;white-space:nowrap;}
 .pago-opt.sel{border-color:var(--gold);color:var(--text);background:var(--card);}
@@ -601,7 +621,22 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
     <div class="trow"><span class="trow-label">Total estimado</span><span class="trow-amt" id="cTotal">$0</span></div>
     <div class="cform">
       <span class="pago-label">Fecha de entrega</span>
-      <input type="date" id="fFecha" oninput="cfe('eFe')">
+      <div class="date-field-wrap">
+        <button type="button" class="date-display" id="dateDisplayBtn" onclick="toggleCalendar(event)">
+          <span id="dateDisplayText">Seleccionar fecha</span>
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </button>
+        <input type="hidden" id="fFecha">
+        <div class="cal-popup" id="calPopup">
+          <div class="cal-header">
+            <button type="button" onclick="calNav(-1)">‹</button>
+            <span class="cal-month-label" id="calMonthLabel"></span>
+            <button type="button" onclick="calNav(1)">›</button>
+          </div>
+          <div class="cal-weekdays"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+      </div>
       <span class="ferr" id="eFe"></span>
       <input type="text" id="fDir" placeholder="Dirección (calle y número) *" oninput="cfe('eDi')">
       <span class="ferr" id="eDi"></span>
@@ -794,13 +829,57 @@ function selPago(v,btn){
   cfe('ePa');
 }
 
-// Delivery date (min: tomorrow)
+// Delivery date calendar
+let calViewDate=new Date(), calMinDate=new Date(), calSelectedDate=null;
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+function pad2(n){return String(n).padStart(2,'0');}
+function isoDate(d){return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;}
+function sameDate(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
 function setMinDate(){
-  const t=new Date();t.setDate(t.getDate()+1);
-  const min=t.toISOString().split('T')[0];
-  const inp=$('fFecha');
-  if(inp){inp.min=min;if(!inp.value)inp.value=min;}
+  const t=new Date();t.setDate(t.getDate()+1);t.setHours(0,0,0,0);
+  calMinDate=t;
+  calViewDate=new Date(t.getFullYear(),t.getMonth(),1);
+  calSelectedDate=new Date(t);
+  $('fFecha').value=isoDate(calSelectedDate);
+  updateDateDisplay();
+  renderCalendar();
 }
+function updateDateDisplay(){
+  $('dateDisplayText').textContent=calSelectedDate?fdLong(isoDate(calSelectedDate)):'Seleccionar fecha';
+}
+function toggleCalendar(e){
+  if(e)e.stopPropagation();
+  $('calPopup').classList.toggle('open');
+  if($('calPopup').classList.contains('open'))renderCalendar();
+}
+function calNav(dir){calViewDate=new Date(calViewDate.getFullYear(),calViewDate.getMonth()+dir,1);renderCalendar();}
+function renderCalendar(){
+  const y=calViewDate.getFullYear(),m=calViewDate.getMonth();
+  $('calMonthLabel').textContent=`${MESES[m]} ${y}`;
+  const firstDay=new Date(y,m,1);
+  const offset=(firstDay.getDay()+6)%7;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  let cells=[];
+  for(let i=0;i<offset;i++)cells.push('<div class="cal-day empty"></div>');
+  for(let d=1;d<=daysInMonth;d++){
+    const dateObj=new Date(y,m,d);
+    const disabled=dateObj<calMinDate;
+    const isSel=calSelectedDate&&sameDate(dateObj,calSelectedDate);
+    const isToday=sameDate(dateObj,new Date());
+    cells.push(`<button type="button" class="cal-day${disabled?' disabled':''}${isSel?' selected':''}${isToday?' today':''}" ${disabled?'disabled':''} onclick="selectCalDate(${y},${m},${d})">${d}</button>`);
+  }
+  $('calGrid').innerHTML=cells.join('');
+}
+function selectCalDate(y,m,d){
+  calSelectedDate=new Date(y,m,d);
+  $('fFecha').value=isoDate(calSelectedDate);
+  updateDateDisplay();cfe('eFe');
+  $('calPopup').classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  const wrap=document.querySelector('.date-field-wrap');
+  if(wrap&&!wrap.contains(e.target))$('calPopup')?.classList.remove('open');
+});
 function fdLong(dStr){
   const d=new Date(dStr+'T00:00:00');
   return d.toLocaleDateString('es-AR',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
