@@ -474,13 +474,14 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
     <span class="auth-sub">Jamonería · Comestibles · Est. 1969</span>
   </div>
   <div class="auth-divider"></div>
-  <div class="tab-row">
+  <div class="tab-row" id="authTabRow">
     <button class="auth-tab active" id="tabLBtn" onclick="switchTab('login')">Iniciar sesión</button>
     <button class="auth-tab" id="tabRBtn" onclick="switchTab('reg')">Crear cuenta</button>
   </div>
   <div id="tabL">
     <div class="field"><label>Email</label><input type="email" id="lE" placeholder="tu@email.com" oninput="ce('eLE')"><span class="err" id="eLE"></span></div>
     <div class="field"><label>Contraseña</label><input type="password" id="lP" placeholder="••••••" oninput="ce('eLP')"><span class="err" id="eLP"></span></div>
+    <button type="button" class="auth-link" onclick="showForgot()">¿Olvidaste tu contraseña?</button>
     <button class="btn-main" onclick="login()">Ingresar</button>
   </div>
   <div id="tabR" style="display:none">
@@ -492,6 +493,16 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
     <div class="field"><label>Contraseña</label><input type="password" id="rP" placeholder="Mínimo 6 caracteres" oninput="ce('eRP')"><span class="err" id="eRP"></span></div>
     <div class="field"><label>Confirmar contraseña</label><input type="password" id="rP2" placeholder="Repetí" oninput="ce('eRP2')"><span class="err" id="eRP2"></span></div>
     <button class="btn-main" onclick="register()">Crear cuenta</button>
+  </div>
+  <div id="tabF" style="display:none">
+    <div class="field"><label>Email</label><input type="email" id="fpE" placeholder="tu@email.com" oninput="ce('eFP')"><span class="err" id="eFP"></span></div>
+    <button class="btn-main" onclick="sendResetEmail()">Enviar enlace de recuperación</button>
+    <button type="button" class="auth-link" style="display:block;width:100%;text-align:center;margin-top:14px;" onclick="backToLogin()">← Volver a iniciar sesión</button>
+  </div>
+  <div id="tabReset" style="display:none">
+    <div class="field"><label>Nueva contraseña</label><input type="password" id="npP" placeholder="Mínimo 6 caracteres" oninput="ce('eNP')"><span class="err" id="eNP"></span></div>
+    <div class="field"><label>Confirmar contraseña</label><input type="password" id="npP2" placeholder="Repetí" oninput="ce('eNP2')"><span class="err" id="eNP2"></span></div>
+    <button class="btn-main" onclick="updatePassword()">Actualizar contraseña</button>
   </div>
 </div></div>
 </div>
@@ -581,7 +592,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 </header>
 <div class="aw">
   <div class="admin-tabs">
-    <button class="atab active" id="atPed" onclick="aTab('ped')">Pedidos</button>
+    <button class="atab active" id="atPed" onclick="aTab('ped')" style="position:relative">Pedidos<span class="h-notif-dot" id="adminNotifDot"></span></button>
     <button class="atab" id="atPro" onclick="aTab('pro')">Productos</button>
   </div>
   <div id="secPed">
@@ -770,6 +781,47 @@ function switchTab(t){
   $('tabLBtn').classList.toggle('active',t==='login');
   $('tabRBtn').classList.toggle('active',t==='reg');
 }
+function showForgot(){
+  $('tabL').style.display='none';$('tabR').style.display='none';$('tabF').style.display='block';$('tabReset').style.display='none';
+  $('authTabRow').style.display='none';
+}
+function backToLogin(){
+  $('tabF').style.display='none';$('tabReset').style.display='none';
+  $('authTabRow').style.display='flex';
+  switchTab('login');
+}
+async function sendResetEmail(){
+  const em=$('fpE').value.trim().toLowerCase();
+  if(!reM.test(em)){se('eFP','Ingresá un email válido.');return;}
+  load(true);
+  const redirectTo=window.location.href.split('#')[0].split('?')[0];
+  const{error}=await sb.auth.resetPasswordForEmail(em,{redirectTo});
+  load(false);
+  if(error){se('eFP','No pudimos enviar el email. Intentá de nuevo.');return;}
+  toast('✓ Revisá tu email para restablecer tu contraseña',5000);
+  backToLogin();
+}
+function showResetForm(){
+  $('tabL').style.display='none';$('tabR').style.display='none';$('tabF').style.display='none';
+  $('authTabRow').style.display='none';
+  $('tabReset').style.display='block';
+}
+async function updatePassword(){
+  const p=$('npP').value,p2=$('npP2').value;
+  let ok=true;
+  if(p.length<6){se('eNP','Mínimo 6 caracteres.');ok=false;}
+  if(p!==p2){se('eNP2','Las contraseñas no coinciden.');ok=false;}
+  if(!ok)return;
+  load(true);
+  const{error}=await sb.auth.updateUser({password:p});
+  load(false);
+  if(error){se('eNP2','No pudimos actualizar la contraseña.');return;}
+  toast('✓ Contraseña actualizada correctamente');
+  history.replaceState(null,'',window.location.pathname);
+  const{data:{session}}=await sb.auth.getSession();
+  if(session){setCU(session.user);cu.role==='admin'?initAdmin():initStore();}
+  else showView('vAuth');
+}
 const reM=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const reN=/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
@@ -818,7 +870,38 @@ function initStore(){
   checkH();setInterval(checkH,60000);
   loadAndRenderGrid('all');showSec('tienda');
 }
-function initAdmin(){showView('vAdmin');$('mobileNav').style.display='none';renderAdmin();aTab('ped');}
+function initAdmin(){showView('vAdmin');$('mobileNav').style.display='none';renderAdmin();aTab('ped');requestNotifPermission();initAdminRealtime();}
+let adminCh=null,adminNewCount=0;
+function requestNotifPermission(){if('Notification' in window&&Notification.permission==='default'){Notification.requestPermission();}}
+function playBeep(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type='sine';o.frequency.value=880;g.gain.value=.15;
+    o.connect(g);g.connect(ctx.destination);
+    o.start();
+    setTimeout(()=>{o.frequency.value=660;},120);
+    o.stop(ctx.currentTime+.35);
+  }catch(e){}
+}
+function initAdminRealtime(){
+  if(adminCh)sb.removeChannel(adminCh);
+  adminCh=sb.channel('admin-orders')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},payload=>{
+      const o=payload.new;
+      playBeep();
+      toast(`🛎 Nuevo pedido: ${o.id} — ${o.user_name}`,6000);
+      if('Notification' in window&&Notification.permission==='granted'){
+        new Notification('Nuevo pedido — La Taurina',{body:`${o.user_name} · ${fm(o.total)}`,icon:'logo.png'});
+      }
+      if($('secPed').style.display!=='none'){renderAdmin();}
+      else{
+        adminNewCount++;
+        const dot=$('adminNotifDot');
+        if(dot){dot.style.display='flex';dot.textContent=adminNewCount;}
+      }
+    }).subscribe();
+}
 
 // Payment options
 function renderPagoOpts(sel=''){
@@ -914,6 +997,7 @@ function aTab(t){
   $('atPed').classList.toggle('active',t==='ped');
   $('atPro').classList.toggle('active',t==='pro');
   if(t==='pro')renderProdList();
+  if(t==='ped'){adminNewCount=0;const dot=$('adminNotifDot');if(dot){dot.style.display='none';dot.textContent='';}}
 }
 
 // Products
@@ -1277,6 +1361,11 @@ async function delProd(id){
 function fd(iso){const d=new Date(iso);return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});}
 
 async function boot(){
+  if(window.location.hash.includes('type=recovery')){
+    showView('vAuth');
+    showResetForm();
+    return;
+  }
   load(true);
   const{data:{session}}=await sb.auth.getSession();
   load(false);
