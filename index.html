@@ -284,6 +284,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .cal-day.selected{background:var(--accent);color:#fff;font-weight:600;}
 .cal-day.today:not(.selected){box-shadow:inset 0 0 0 1px var(--gold);}
 .cal-day.empty{visibility:hidden;cursor:default;}
+.date-hint{font-size:11px;color:var(--gold);margin-top:-4px;line-height:1.5;}
 .pago-icons{display:flex;gap:7px;margin-bottom:8px;flex-wrap:wrap;}
 .pago-opt{border:1px solid var(--border);border-radius:2px;padding:6px 10px;font-size:11px;cursor:pointer;color:var(--gray);transition:all .2s;background:var(--bg2);font-family:'Inter',sans-serif;white-space:nowrap;}
 .pago-opt.sel{border-color:var(--gold);color:var(--text);background:var(--card);}
@@ -522,7 +523,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
     <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
   </div>
 </header>
-<div id="cerradoBanner">⏰ Estamos fuera de horario. Pedidos de 6:00 a 16:00 hs.</div>
+<div id="cerradoBanner">⏰ Estás fuera de nuestro horario de atención (6:00–16:00 hs). Podés hacer tu pedido igual — se entrega a partir de 2 días después.</div>
 
 <div id="sT">
   <div class="hero">
@@ -638,6 +639,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
         </div>
       </div>
       <span class="ferr" id="eFe"></span>
+      <div class="date-hint" id="dateHint"></div>
       <input type="text" id="fDir" placeholder="Dirección (calle y número) *" oninput="cfe('eDi')">
       <span class="ferr" id="eDi"></span>
       <textarea id="fNota" rows="2" placeholder="Aclaraciones (sin TACC, corte especial...)"></textarea>
@@ -757,7 +759,7 @@ function checkH(){
   b.className='h-badge '+(o?'ab':'ce');
   $('hT').textContent=o?'Abierto':'Cerrado';
   $('cerradoBanner').style.display=o?'none':'block';
-  const wb=$('waBtn');if(wb){wb.disabled=!o;wb.textContent=o?'Enviar pedido por WhatsApp':'⏰  Fuera de horario';}
+  if($('fFecha'))setMinDate();
 }
 
 // Auth
@@ -835,13 +837,25 @@ const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','
 function pad2(n){return String(n).padStart(2,'0');}
 function isoDate(d){return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;}
 function sameDate(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
+function computeMinDate(){
+  const now=new Date();
+  const closeMinutes=CH*60+CM;
+  const nowMinutes=now.getHours()*60+now.getMinutes();
+  const daysToAdd=nowMinutes>=closeMinutes?2:1;
+  const t=new Date();t.setDate(t.getDate()+daysToAdd);t.setHours(0,0,0,0);
+  return{date:t,daysToAdd};
+}
 function setMinDate(){
-  const t=new Date();t.setDate(t.getDate()+1);t.setHours(0,0,0,0);
-  calMinDate=t;
-  calViewDate=new Date(t.getFullYear(),t.getMonth(),1);
-  calSelectedDate=new Date(t);
-  $('fFecha').value=isoDate(calSelectedDate);
-  updateDateDisplay();
+  const{date:newMin,daysToAdd}=computeMinDate();
+  calMinDate=newMin;
+  if(!calSelectedDate||calSelectedDate<newMin){
+    calSelectedDate=new Date(newMin);
+    calViewDate=new Date(newMin.getFullYear(),newMin.getMonth(),1);
+    $('fFecha').value=isoDate(calSelectedDate);
+    updateDateDisplay();
+  }
+  const hint=$('dateHint');
+  if(hint)hint.textContent=daysToAdd===2?'Pedidos realizados fuera de horario se entregan a partir de 2 días después.':'';
   renderCalendar();
 }
 function updateDateDisplay(){
@@ -1043,7 +1057,7 @@ function updPmQty(){
 }
 
 // Cart
-function openCart(){$('overlay').classList.add('open');$('cartPanel').classList.add('open');renderCart();}
+function openCart(){setMinDate();$('overlay').classList.add('open');$('cartPanel').classList.add('open');renderCart();}
 function closeCart(){$('overlay').classList.remove('open');$('cartPanel').classList.remove('open');}
 function closeAll(){closeCart();closeProdModal();}
 function renderCart(){
