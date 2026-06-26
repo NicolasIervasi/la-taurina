@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>La Taurina — Almacén de Barrio</title>
+<meta name="description" content="Almacén de barrio, jamonería y comestibles desde 1969. Hacé tu pedido online y lo recibís en tu puerta.">
+<link rel="icon" type="image/png" href="logo.png">
+<meta property="og:title" content="La Taurina — Almacén de Barrio">
+<meta property="og:description" content="Jamonería · Comestibles · Est. 1969. Hacé tu pedido online y lo recibís en tu puerta.">
+<meta property="og:image" content="https://nicolasiervasi.github.io/la-taurina/logo.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -579,16 +586,24 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
   <div class="admin-tabs">
     <button class="atab active" id="atPed" onclick="aTab('ped')" style="position:relative">Pedidos<span class="h-notif-dot" id="adminNotifDot"></span></button>
     <button class="atab" id="atPro" onclick="aTab('pro')">Productos</button>
+    <button class="atab" id="atCli" onclick="aTab('cli')">Clientes</button>
   </div>
   <div id="secPed">
     <div class="astats" id="aStats"></div>
     <div class="ped-filter" id="pedFilter"></div>
-    <div class="atitle-row"><div class="atitle">Pedidos</div></div>
+    <div class="atitle-row"><div class="atitle">Pedidos</div><button class="add-btn" onclick="exportOrdersCSV()">⬇ Exportar a Excel</button></div>
     <div id="aOrders"></div>
   </div>
   <div id="secPro" style="display:none">
-    <div class="atitle-row"><div class="atitle">Productos</div><button class="add-btn" onclick="openModal()">+ Agregar producto</button></div>
+    <div class="atitle-row">
+      <div class="atitle">Productos</div>
+      <button class="add-btn" onclick="openModal()">+ Agregar producto</button>
+    </div>
     <div id="prodList"></div>
+  </div>
+  <div id="secCli" style="display:none">
+    <div class="atitle-row"><div class="atitle">Clientes</div></div>
+    <div id="cliList"></div>
   </div>
 </div>
 </div>
@@ -915,9 +930,12 @@ function showSec(s){
 function aTab(t){
   $('secPed').style.display=t==='ped'?'block':'none';
   $('secPro').style.display=t==='pro'?'block':'none';
+  $('secCli').style.display=t==='cli'?'block':'none';
   $('atPed').classList.toggle('active',t==='ped');
   $('atPro').classList.toggle('active',t==='pro');
+  $('atCli').classList.toggle('active',t==='cli');
   if(t==='pro')renderProdList();
+  if(t==='cli')renderClients();
   if(t==='ped'){adminNewCount=0;const dot=$('adminNotifDot');if(dot){dot.style.display='none';dot.textContent='';}}
 }
 
@@ -1279,6 +1297,66 @@ async function delAllEntregados(){
   renderAdmin();
   toast('✓ Pedidos entregados eliminados');
 }
+
+// EXPORT CSV
+function csvEsc(v){
+  if(v==null)return'';
+  const s=String(v);
+  return/[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;
+}
+async function exportOrdersCSV(){
+  load(true);
+  const{data:ords,error}=await sb.from('orders').select('*').order('created_at',{ascending:false});
+  load(false);
+  if(error){alert('No se pudieron exportar los pedidos.');return;}
+  const rows=[['ID','Fecha pedido','Cliente','Teléfono','Dirección','Fecha entrega','Pago','Estado','Productos','Total']];
+  (ords||[]).forEach(o=>{
+    rows.push([o.id,fd(o.created_at),o.user_name,o.user_tel||'',o.address,o.delivery_date||'',o.payment,o.status,o.items.map(i=>`${i.name} x${i.qty}`).join('; '),o.total]);
+  });
+  const csv=rows.map(r=>r.map(csvEsc).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`pedidos_la_taurina_${isoDate(new Date())}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('✓ Pedidos exportados');
+}
+
+// CLIENTES
+async function renderClients(){
+  $('cliList').innerHTML='<div class="noord">Cargando...</div>';
+  const{data:ords}=await sb.from('orders').select('*').order('created_at',{ascending:false});
+  const all=ords||[];
+  const map={};
+  all.forEach(o=>{
+    const key=o.user_id;
+    if(!map[key])map[key]={name:o.user_name,tel:o.user_tel,orders:[],total:0};
+    map[key].orders.push(o);
+    map[key].total+=o.total;
+  });
+  const clients=Object.values(map).sort((a,b)=>b.total-a.total);
+  if(!clients.length){$('cliList').innerHTML='<div class="noord">Todavía no hay clientes con pedidos.</div>';return;}
+  $('cliList').innerHTML=clients.map((c,i)=>`
+    <div class="aocard">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer" onclick="toggleClient(${i})">
+        <div>
+          <div class="aoid">${c.name}</div>
+          <div class="aoc">📞 ${c.tel||'—'} &nbsp;·&nbsp; ${c.orders.length} pedido${c.orders.length!==1?'s':''} &nbsp;·&nbsp; Último: ${fd(c.orders[0].created_at)}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="aototal">${fm(c.total)}</div>
+          <div class="oexpand" style="margin-top:4px">Ver pedidos ▾</div>
+        </div>
+      </div>
+      <div class="ocard-detail" id="cli${i}">
+        <div class="ocard-items">
+          ${c.orders.map(o=>`<div class="od-item"><span>${o.id} · ${fd(o.created_at)} · ${o.status}</span><span>${fm(o.total)}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+function toggleClient(i){$('cli'+i).classList.toggle('open');}
 async function updSt(id,v){await sb.from('orders').update({status:v}).eq('id',id);renderAdmin();}
 
 function printTicket(o){
