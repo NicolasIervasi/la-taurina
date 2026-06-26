@@ -380,6 +380,8 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .pf-btn.active{background:var(--text);color:var(--bg);border-color:var(--text);}
 .pf-count{font-size:10px;background:var(--border);border-radius:50px;padding:1px 7px;color:var(--gray);}
 .pf-btn.active .pf-count{background:rgba(255,255,255,.2);color:#fff;}
+.pf-btn.pf-danger{color:#c0392b;border-color:rgba(192,57,43,.35);}
+.pf-btn.pf-danger:hover{background:#c0392b;color:#fff;border-color:#c0392b;}
 
 /* STOCK TOGGLE */
 .stock-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;}
@@ -1228,7 +1230,8 @@ async function renderAdmin(){
   const entregados=all.filter(x=>x.status==='Entregado');
   $('pedFilter').innerHTML=`
     <button class="pf-btn${pedFilter==='activos'?' active':''}" onclick="setPedFilter('activos')">Activos <span class="pf-count">${activos.length}</span></button>
-    <button class="pf-btn${pedFilter==='entregados'?' active':''}" onclick="setPedFilter('entregados')">Entregados <span class="pf-count">${entregados.length}</span></button>`;
+    <button class="pf-btn${pedFilter==='entregados'?' active':''}" onclick="setPedFilter('entregados')">Entregados <span class="pf-count">${entregados.length}</span></button>
+    ${pedFilter==='entregados'&&entregados.length?`<button class="pf-btn pf-danger" onclick="delAllEntregados()">🗑 Eliminar todos</button>`:''}`;
 
   const list=pedFilter==='entregados'?entregados:activos;
   $('aOrders').innerHTML=!list.length?`<div class="noord">${pedFilter==='entregados'?'Todavía no hay pedidos entregados.':'No hay pedidos activos por el momento.'}</div>`
@@ -1240,7 +1243,10 @@ async function renderAdmin(){
             <div class="aoc">👤 ${x.user_name} &nbsp;·&nbsp; 📞 ${x.user_tel||'—'} &nbsp;·&nbsp; 📍 ${x.address}</div>
             <div class="aoc">${fd(x.created_at)}${x.delivery_date?` &nbsp;·&nbsp; 📅 Entrega: <strong>${fdLong(x.delivery_date)}</strong>`:''}</div>
           </div>
-          <button class="iact print" onclick='printTicket(${JSON.stringify(x).replace(/'/g,"&#39;")})' title="Imprimir ticket">🖨</button>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <button class="iact print" onclick='printTicket(${JSON.stringify(x).replace(/'/g,"&#39;")})' title="Imprimir ticket">🖨</button>
+            <button class="iact del" onclick="delOrder('${x.id}')" title="Eliminar pedido">✕</button>
+          </div>
         </div>
         <div class="aoi">${x.items.map(i=>`${i.e} ${i.name} × ${i.qty} — ${fm(i.price*i.qty)}`).join('<br>')}</div>
         <div class="aof">
@@ -1255,6 +1261,22 @@ async function renderAdmin(){
       </div>`).join('');
 }
 function setPedFilter(f){pedFilter=f;renderAdmin();}
+async function delOrder(id){
+  if(!confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.'))return;
+  load(true);
+  await sb.from('orders').delete().eq('id',id);
+  load(false);
+  renderAdmin();
+  toast('✓ Pedido eliminado');
+}
+async function delAllEntregados(){
+  if(!confirm('¿Eliminar TODOS los pedidos entregados? Esta acción no se puede deshacer.'))return;
+  load(true);
+  await sb.from('orders').delete().eq('status','Entregado');
+  load(false);
+  renderAdmin();
+  toast('✓ Pedidos entregados eliminados');
+}
 async function updSt(id,v){await sb.from('orders').update({status:v}).eq('id',id);renderAdmin();}
 
 function printTicket(o){
