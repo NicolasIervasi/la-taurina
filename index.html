@@ -373,6 +373,14 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 .iact.del:hover{border-color:#c0392b;color:#c0392b;}
 .iact.print:hover{border-color:var(--accent);color:var(--accent);}
 
+/* PEDIDOS FILTER */
+.ped-filter{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.pf-btn{border:1px solid var(--border);background:var(--card);padding:7px 14px;border-radius:50px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--gray);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:7px;}
+.pf-btn:hover{border-color:var(--gold);}
+.pf-btn.active{background:var(--text);color:var(--bg);border-color:var(--text);}
+.pf-count{font-size:10px;background:var(--border);border-radius:50px;padding:1px 7px;color:var(--gray);}
+.pf-btn.active .pf-count{background:rgba(255,255,255,.2);color:#fff;}
+
 /* STOCK TOGGLE */
 .stock-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;}
 .toggle-track{width:34px;height:18px;border-radius:50px;background:var(--border);position:relative;transition:background .2s;border:1px solid rgba(0,0,0,.08);}
@@ -485,7 +493,7 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
 <!-- ══ STORE ══ -->
 <div id="vStore" style="display:none">
 <header>
-  <div class="h-announce">Pedidos disponibles de 6:00 a 16:00 hs · Todos los días</div>
+  <div class="h-announce">Pedidos online las 24 horas · Entrega de 6:00 a 16:00 hs</div>
   <div class="h-main">
     <div class="logo-group">
       <div class="logo-ring"><img src="logo.png" alt="La Taurina" class="logo-img"></div>
@@ -572,7 +580,8 @@ header{background:var(--hbg);position:sticky;top:0;z-index:100;border-bottom:1px
   </div>
   <div id="secPed">
     <div class="astats" id="aStats"></div>
-    <div class="atitle-row"><div class="atitle">Pedidos recibidos</div></div>
+    <div class="ped-filter" id="pedFilter"></div>
+    <div class="atitle-row"><div class="atitle">Pedidos</div></div>
     <div id="aOrders"></div>
   </div>
   <div id="secPro" style="display:none">
@@ -716,7 +725,7 @@ const CATS={lacteos:'Lácteos',fiambres:'Fiambres',verduras:'Verduras',bebidas:'
 const PAGOS=['Efectivo','Transferencia','Tarjeta débito','Tarjeta crédito','Mercado Pago'];
 const BADGES={oferta:{label:'Oferta',cls:'badge-oferta'},destacado:{label:'Destacado',cls:'badge-destacado'},nuevo:{label:'Nuevo',cls:'badge-nuevo'}};
 
-let cu=null,cart={},aCat='all',editId=null,PRODS=[],searchQ='',pmProdId=null,unreadNotifs=0,realtimeCh=null,adminCh=null,adminNewCount=0;
+let cu=null,cart={},aCat='all',editId=null,PRODS=[],searchQ='',pmProdId=null,unreadNotifs=0,realtimeCh=null,adminCh=null,adminNewCount=0,pedFilter='activos';
 const $=id=>document.getElementById(id);
 const fm=n=>'$'+Math.round(n).toLocaleString('es-AR');
 
@@ -1208,13 +1217,22 @@ function toggleOrder(id){$(id).classList.toggle('open');}
 async function renderAdmin(){
   $('aStats').innerHTML='<div class="scard" style="grid-column:1/-1;text-align:center;color:var(--gray);font-size:13px;">Cargando...</div>';
   const{data:ords}=await sb.from('orders').select('*').order('created_at',{ascending:false});
-  const o=ords||[],tot=o.reduce((s,x)=>s+x.total,0),pend=o.filter(x=>x.status==='Pendiente').length;
+  const all=ords||[];
+  const tot=all.reduce((s,x)=>s+x.total,0),pend=all.filter(x=>x.status==='Pendiente').length;
   $('aStats').innerHTML=`
-    <div class="scard"><div class="snum">${o.length}</div><div class="slabel">Pedidos totales</div></div>
+    <div class="scard"><div class="snum">${all.length}</div><div class="slabel">Pedidos totales</div></div>
     <div class="scard"><div class="snum">${pend}</div><div class="slabel">Pendientes</div></div>
     <div class="scard"><div class="snum">${fm(tot)}</div><div class="slabel">Facturado</div></div>`;
-  $('aOrders').innerHTML=!o.length?'<div class="noord">No hay pedidos todavía.</div>'
-    :o.map(x=>`
+
+  const activos=all.filter(x=>x.status!=='Entregado');
+  const entregados=all.filter(x=>x.status==='Entregado');
+  $('pedFilter').innerHTML=`
+    <button class="pf-btn${pedFilter==='activos'?' active':''}" onclick="setPedFilter('activos')">Activos <span class="pf-count">${activos.length}</span></button>
+    <button class="pf-btn${pedFilter==='entregados'?' active':''}" onclick="setPedFilter('entregados')">Entregados <span class="pf-count">${entregados.length}</span></button>`;
+
+  const list=pedFilter==='entregados'?entregados:activos;
+  $('aOrders').innerHTML=!list.length?`<div class="noord">${pedFilter==='entregados'?'Todavía no hay pedidos entregados.':'No hay pedidos activos por el momento.'}</div>`
+    :list.map(x=>`
       <div class="aocard">
         <div class="aoh" style="display:flex;justify-content:space-between;align-items:flex-start">
           <div>
@@ -1236,6 +1254,7 @@ async function renderAdmin(){
         </div>
       </div>`).join('');
 }
+function setPedFilter(f){pedFilter=f;renderAdmin();}
 async function updSt(id,v){await sb.from('orders').update({status:v}).eq('id',id);renderAdmin();}
 
 function printTicket(o){
