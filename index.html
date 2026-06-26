@@ -1264,16 +1264,18 @@ function setPedFilter(f){pedFilter=f;renderAdmin();}
 async function delOrder(id){
   if(!confirm('¿Eliminar este pedido? Esta acción no se puede deshacer.'))return;
   load(true);
-  await sb.from('orders').delete().eq('id',id);
+  const{error}=await sb.from('orders').delete().eq('id',id);
   load(false);
+  if(error){alert('No se pudo eliminar el pedido. Revisá los permisos en Supabase.');return;}
   renderAdmin();
   toast('✓ Pedido eliminado');
 }
 async function delAllEntregados(){
   if(!confirm('¿Eliminar TODOS los pedidos entregados? Esta acción no se puede deshacer.'))return;
   load(true);
-  await sb.from('orders').delete().eq('status','Entregado');
+  const{error}=await sb.from('orders').delete().eq('status','Entregado');
   load(false);
+  if(error){alert('No se pudieron eliminar los pedidos. Revisá los permisos en Supabase.');return;}
   renderAdmin();
   toast('✓ Pedidos entregados eliminados');
 }
